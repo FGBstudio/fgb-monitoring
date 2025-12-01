@@ -1,0 +1,253 @@
+/* ---------------------------
+   PANEL SERVIZI - DESKTOP
+   --------------------------- */
+
+   #div-container {
+    display: flex;
+    gap: 20px;
+    min-height: 75vh;
+  }
+  
+  /* Card base */
+  .service-item {
+    position: relative;
+    flex: 1;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition:
+      flex 0.75s ease-in-out,
+      padding 0.75s ease-in-out;
+  }
+  
+  /* Overlay scuro */
+  .service-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.75s ease-in-out;
+    z-index: 1;
+  }
+  
+  /* Immagini di sfondo
+     ⚠️ Cambia i nomi se non coincidono con i tuoi file.
+     I percorsi sono relativi a: assets/css/services-panel.css
+     quindi ../img/services/...
+  */
+  .service-1 {
+    background-image: url("../img/services/bg-green.webp");
+  }
+  
+  .service-2 {
+    background-image: url("../img/services/bg-smart.webp");
+  }
+  
+  .service-3 {
+    background-image: url("../img/services/bg-testing.webp");
+  }
+  
+  /* Titolo card */
+  .section-title {
+    position: absolute;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
+    padding: 10px;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    text-shadow:
+      -1px 1px 0 #000,
+      -1px 0 0 #000,
+      0 0 5px #000,
+      0 0 10px #000,
+      0 0 15px #000;
+    transition:
+      top 0.75s ease-in-out,
+      opacity 0.75s ease-in-out,
+      transform 0.75s ease-in-out,
+      text-shadow 0.75s ease-in-out;
+  }
+  
+  /* Dettagli nascosti di default su desktop */
+  .details-list {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 40px);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.75s ease-in-out,
+      visibility 0.75s ease-in-out,
+      top 0.75s ease-in-out,
+      transform 0.75s ease-in-out;
+    text-align: left;
+  }
+  
+  .details-list ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.3;
+  }
+  
+  .details-list li {
+    margin: 5px 0;
+  }
+  
+  .details-list li strong {
+    display: block;
+    margin-bottom: 2px;
+  }
+  
+  /* Logo in basso (nascosto di default su desktop, visibile su hover) */
+  .service-logo {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    max-width: 250px;
+    height: auto;
+    display: none;
+  }
+  
+  /* Effetto hover: card si allarga, overlay, titolo su, dettagli visibili, logo ON */
+  .service-item:hover {
+    flex: 3;
+    padding: 0;
+  }
+  
+  .service-item:hover::after {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  
+  .service-item:hover .section-title {
+    top: 5%;
+    opacity: 1;
+    transform: translate(-50%, 0);
+    text-shadow: none;
+  }
+  
+  .service-item:hover .details-list {
+    opacity: 1;
+    visibility: visible;
+    top: 15%;
+    transform: translate(-50%, 0);
+  }
+  
+  .service-item:hover .service-logo {
+    display: block;
+  }
+  
+  /* Link dentro il pannello */
+  .details-list a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  
+  .details-list a:hover {
+    opacity: 0.85;
+  }
+  
+  /* ---------------------------
+     RESPONSIVE
+     --------------------------- */
+  
+  /* Tablet & mobile */
+  @media screen and (max-width: 768px) {
+    #div-container {
+      flex-direction: column;
+      min-height: auto;
+    }
+  
+    .service-item {
+      flex: none;
+      width: 100%;
+      padding: 100px 20px;
+    }
+  
+    /* Overlay sempre presente su mobile */
+    .service-item::after {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  
+    .section-title {
+      position: static;
+      transform: none;
+      text-align: left;
+      text-shadow: none;
+      margin-bottom: 8px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  
+    .details-list {
+      position: static;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      width: 100%;
+      margin-top: 4px;
+    }
+  
+    .details-list ul {
+      font-size: 0.9em;
+    }
+  
+    .service-logo {
+      position: relative;
+      display: block;
+      margin-top: 20px;
+      max-width: 150px;
+      transform: none;
+      left: auto;
+      bottom: auto;
+    }
+  
+    .service-item:hover {
+      flex: none; /* niente espansione su mobile */
+    }
+  }
+  
+  /* Mobile small */
+  @media screen and (max-width: 480px) {
+    .service-item {
+      padding: 80px 16px;
+    }
+  
+    .section-title {
+      font-size: 18px;
+      text-align: center;
+    }
+  
+    .details-list {
+      text-align: left;
+    }
+  
+    .service-logo {
+      max-width: 130px;
+      margin: 16px auto 0;
+    }
+  }
+  

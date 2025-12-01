@@ -1,0 +1,3454 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FGB Monitoring</title>
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+
+  <style>
+    /* ========== RESET BASE ========== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    /* ========== HEADER ========== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      mix-blend-mode: difference;
+      color: #fff;
+      pointer-events: none;
+      transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        mix-blend-mode 0.3s ease;
+    }
+    .site-header > * {
+      pointer-events: auto;
+    }
+    .site-header:hover {
+      background: rgba(255, 255, 255, 0.98);
+      color: #111;
+      mix-blend-mode: normal;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Header in stato compattato (quando il logo entra nella barra) */
+    .site-header--compact {
+      background: rgba(255, 255, 255, 0.98);
+      color: #111;
+      mix-blend-mode: normal;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Evita che l'hover lo scurisca/cambi */
+    .site-header--compact:hover {
+      background: rgba(255, 255, 255, 0.98);
+      color: #111;
+      mix-blend-mode: normal;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-left,
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .menu-toggle span {
+      width: 18px;
+      height: 1px;
+      background: currentColor;
+      display: block;
+    }
+
+    .header-logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 10rem; /* posizione grande nella hero */
+      transition:
+        top 0.45s ease,
+        transform 0.45s ease;
+    }
+
+    .header-logo img {
+      height: 150px; /* logo grande in apertura */
+      display: block;
+      transition:
+        height 0.45s ease,
+        transform 0.45s ease;
+    }
+
+    /* Stato “compattato” quando scrolli: logo dentro la barra menu */
+    .site-header--compact .header-logo {
+      top: 0.8rem;               /* stessa quota del padding header */
+    }
+
+    .site-header--compact .header-logo img {
+      height: 40px;              /* dimensione logo dentro la barra */
+    }
+
+    .header-link {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+    }
+
+    .icon-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-circle svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    /* ========== HERO VIDEO ========== */
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-video-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform 1.5s ease-out;
+    }
+    .hero-section.hero--paused .hero-video {
+      transform: scale(1);
+    }
+
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.15) 0%,
+        rgba(0, 0, 0, 0.3) 40%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 7rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.2s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(1.9rem, 2.8vw, 2.6rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1.1s ease-out 0.4s forwards;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.7s forwards;
+    }
+
+    .hero-link {
+      position: relative;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .hero-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .hero-link:hover::after {
+      transform: scaleX(1);
+    }
+
+    .hero-controls {
+      position: absolute;
+      left: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 15;
+    }
+
+    .circle-control {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px);
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        border-color 0.2s ease;
+    }
+    .circle-control:hover {
+      background: rgba(0, 0, 0, 0.45);
+      transform: scale(1.05);
+      border-color: #fff;
+    }
+    .circle-control svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
+      display: block;
+    }
+
+    .icon--hidden {
+      display: none;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ================= SEZIONE SETTORI CHE SERVIAMO ================= */
+    .sectors-section {
+      padding: 60px 0 80px;
+      background-color: #ffffff;
+      color: #111111;
+      text-align: center;
+    }
+
+    .sectors-section__title {
+      font-size: clamp(26px, 3vw, 34px);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      color: #111111;
+    }
+
+    .sectors-section__subtitle {
+      font-size: 20px;
+      color: #555555;
+      margin-bottom: 24px;
+    }
+
+    .sectors-carousel {
+      position: relative;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .sectors-carousel__track {
+      display: flex;
+      gap: 40px;
+      overflow: hidden;
+      scroll-behavior: smooth;
+      padding: 20px 0 10px;
+    }
+
+    .sector-slide {
+      position: relative;
+      flex: 0 0 70vw;
+      max-width: 960px;
+      height: min(60vh, 550px);
+      border-radius: 28px;
+      overflow: hidden;
+      cursor: pointer;
+      transform: scale(0.85);
+      opacity: 0.45;
+      transition:
+        transform 0.6s ease,
+        opacity 0.6s ease,
+        box-shadow 0.6s ease;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+
+    .sector-slide.is-active {
+      transform: scale(1);
+      opacity: 1;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25);
+      z-index: 2;
+    }
+
+    .sector-slide__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.05);
+      transition: filter 0.6s ease, transform 0.6s ease;
+    }
+
+    .sector-slide:not(.is-active) .sector-slide__image {
+      filter: blur(2px) brightness(0.6);
+      transform: scale(1.03);
+    }
+
+    .sector-slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.35) 35%,
+        rgba(0, 0, 0, 0.6) 100%
+      );
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      opacity: 0.9;
+      z-index: 1;
+    }
+
+    .sector-slide.is-active::before {
+      opacity: 0.7;
+    }
+
+    .sector-slide__title,
+    .sector-slide__cta,
+    .sector-slide__description {
+      color: #ffffff;
+    }
+
+    .sector-slide__title {
+      position: absolute;
+      top: 22px;
+      left: 26px;
+      right: 26px;
+      z-index: 2;
+      text-align: left;
+      font-size: clamp(18px, 2.1vw, 22px);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .sector-slide__cta {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .sector-slide__description {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 24px;
+      font-size: 17px;
+      line-height: 1.5;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(12px);
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+      z-index: 2;
+    }
+
+    .sector-slide.is-active .sector-slide__description {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sectors-carousel__arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.94);
+      color: #111111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition:
+        background 0.3s ease,
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+      z-index: 5;
+    }
+    .sector-slide__title {
+      position: absolute;
+      top: 22px;
+      left: 26px;
+      right: 26px;
+      z-index: 2;
+      text-align: left;
+      font-size: clamp(18px, 2.1vw, 22px);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+
+      /* se usi il logo immagine, questi per il testo non danno fastidio */
+    }
+
+    /* logo dentro al titolo */
+    .sector-slide__title-image {
+      display: block;
+      max-height: 80px;   /* regola l’altezza del logo */
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.541)); /* leggero glow come il testo */
+    }
+
+    .sectors-carousel__arrow--prev {
+      left: 18px;
+    }
+
+    .sectors-carousel__arrow--next {
+      right: 18px;
+    }
+
+    .sectors-carousel__arrow:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: #111111;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .sectors-carousel__arrow span {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    #monitoring-section {
+      position: relative;
+      overflow: hidden;  /* evita che il pattern esca fuori */
+      background-color: #ffffff;
+    }
+
+    #monitoring-section::before {
+      content: "";
+      margin-top: 00px;
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/img/pattern-grigio.png"); /* tuo file */
+      background-repeat: repeat;
+      background-size: 900px auto;  /* aumenta/diminuisci per cambiare la scala */
+      opacity: 0.32;                /* intensità del pattern */
+      pointer-events: none;
+      z-index: 0;         /* non blocca click su slider */
+    }
+    .sectors-section__title,
+    .sectors-section__subtitle,
+    .sectors-carousel {
+      position: relative;
+      z-index: 1;   /* sopra al ::before */
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .sectors-carousel {
+        padding: 0 20px;
+      }
+
+      .sector-slide {
+        flex: 0 0 86vw;
+        height: min(55vh, 440px);
+      }
+
+      .sectors-carousel__arrow {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sectors-section {
+        padding: 40px 0 60px;
+      }
+
+      .sectors-carousel {
+        padding: 0 12px;
+      }
+
+      .sector-slide {
+        flex: 0 0 88vw;
+        height: min(50vh, 380px);
+        border-radius: 22px;
+      }
+
+      .sector-slide__title {
+        top: 18px;
+        left: 20px;
+        right: 20px;
+        font-size: 16px;
+      }
+
+      .sector-slide__description {
+        font-size: 14px;
+        left: 20px;
+        right: 20px;
+      }
+
+      .sectors-carousel__arrow--prev {
+        left: 6px;
+      }
+
+      .sectors-carousel__arrow--next {
+        right: 6px;
+      }
+    }
+
+  /* ========== FOOTER ========== */
+
+/* ========== FOOTER ========== */
+
+  .site-footer {
+    /* full width, esce dal container centrale */
+    width: 100vw;
+    margin-left: -34px;
+    margin-right: calc(50% - 50vw);
+
+    background: #ffffff;
+    color: #00000083;
+    padding: 48px 10px 32px;
+    font-size: 14px;
+
+    /* le righe ora sono qui, quindi a tutta pagina */
+    border-top: 1px solid #dddddd96;
+    border-bottom: 1px solid #e2e2e2;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* TOP: newsletter + colonne nav */
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 56px;
+
+    /* NIENTE border qui, li abbiamo spostati su .site-footer */
+    border-top: none;
+    border-bottom: none;
+
+    padding: 40px 0 36px;
+  }
+
+  /* --- NEWSLETTER --- */
+  .footer-newsletter {
+    flex: 1 1 340px;
+  }
+
+  .footer-newsletter__title {
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .footer-newsletter__form {
+    margin-bottom: 18px;
+  }
+
+  .footer-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .footer-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #111111;
+    padding: 8px 0;
+    font: inherit;
+    background: transparent;
+    outline: none;
+  }
+
+  .footer-input::placeholder {
+    color: #777777;
+  }
+
+  .footer-newsletter__submit {
+    border: none;
+    background: none;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .footer-newsletter__submit::after {
+    content: "→";
+    margin-left: 8px;
+    font-size: 14px;
+  }
+
+  .footer-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #333333;
+  }
+
+  .footer-consent input {
+    margin-top: 3px;
+  }
+
+  /* social in riga */
+  .footer-social {
+    list-style: none;
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 18px;
+  }
+
+  .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-social img {
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  /* --- COLONNE DI NAVIGAZIONE --- */
+  .footer-nav-columns {
+    flex: 2 1 580px;
+    display: flex;
+    flex-wrap: nowrap;          /* niente wrap: 4 colonne sulla stessa riga */
+    justify-content: space-between;
+    gap: 70px;
+  }
+
+  .footer-nav-col {
+    flex: 0 0 23%;              /* 4 colonne più strette ma allineate */
+    min-width: 0;
+  }
+
+  .footer-nav-title {
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #006367
+  }
+
+  .footer-nav-list {
+    list-style: none;
+  }
+
+  .footer-nav-list li + li {
+    margin-top: 6px;
+  }
+
+  .footer-nav-list a {
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  /* --- BOTTOM BAR --- */
+  /* stacked, allineati a sinistra */
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;   /* © e città uno sotto l’altra */
+    align-items: flex-start;
+    gap: 6px;
+    padding-top: 20px;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: #555555;
+  }
+
+  .footer-bottom-cta {
+    display: block;            /* occupa tutta la riga sotto */
+  }
+
+  .footer-cta-link {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    cursor: pointer;
+    color: #006367;
+    white-space: nowrap;       /* se vuoi evitare l’andare a capo */
+  }
+
+  .footer-cta-link:hover {
+    border-bottom-color: #006367;
+  }
+
+  .footer-cta-link--muted {
+    background: none;
+  }
+
+  .footer-bottom-logo {
+    width: 100%;
+    text-align: center;
+    margin-top: 12px; /* se vuoi un po’ di spazio sopra */
+  }
+
+  .footer-bottom-logo img {
+    display: inline-block;
+    width: 1200px;
+    height: auto;
+  }
+
+
+  /* --- RESPONSIVE FOOTER --- */
+  @media (max-width: 900px) {
+    .site-footer {
+      padding: 32px 20px 24px;
+    }
+
+    .footer-top {
+      gap: 40px;
+      padding: 32px 0 28px;
+    }
+
+    .footer-nav-columns {
+      flex-wrap: wrap;
+    }
+
+    .footer-nav-col {
+      flex: 1 1 45%;
+      margin-bottom: 16px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer-top {
+      flex-direction: column;
+    }
+
+    .footer-nav-columns {
+      flex-direction: column;
+    }
+
+    .footer-nav-col {
+      min-width: 0;
+    }
+
+    .footer-social {
+      gap: 12px;
+      margin-top: 24px;
+      font-size: 0;
+    }
+
+    .footer-social a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-social img {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .footer-bottom {
+      align-items: flex-start;
+    }
+  }
+
+  /* ========== CONTACT SIDE PANEL ========== */
+
+  .contact-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .contact-panel.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .contact-panel__overlay {
+    flex: 1 1 auto;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  /* spalla più larga, stile sidepanel luxury */
+  .contact-panel__container {
+    width: 60vw;
+    max-width: 720px;
+    min-width: 480px;
+    height: 100vh;
+    background: #006367;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 2.75rem 3.25rem 3rem;
+    box-shadow: -16px 0 40px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 900px) {
+    .contact-panel__container {
+      width: 100vw;
+      max-width: none;
+      min-width: 0;
+      padding: 2.25rem 1.75rem 2rem;
+    }
+  }
+
+  .contact-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .contact-panel__title {
+    font-size: 1.5rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* icona chiusura: tieni la tua, solo refine */
+  .contact-panel__close {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .contact-panel__close svg {
+    width: 16px;
+    height: 16px;
+    fill: #ffffff;
+  }
+
+  .contact-panel__body {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .contact-panel__inner {
+    max-width: 460px;
+  }
+
+  /* intro testo leggero */
+  .contact-panel__intro {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin-bottom: 2.4rem;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* LISTE */
+
+  .contact-panel__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* contatti principali con icona in cerchio */
+  .contact-panel__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1.3rem;
+  }
+
+  .contact-panel__icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  .contact-panel__icon svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 1.7;
+  }
+
+  /* testo voce contatto */
+  .contact-panel__label-main {
+    font-size: 0.95rem;
+  }
+
+  .contact-panel__label-sub {
+    font-size: 0.78rem;
+    margin-top: 0.2rem;
+    opacity: 0.8;
+  }
+
+  /* separatore sottile come LV */
+  .contact-panel__divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.24);
+    margin: 2.1rem 0 1.7rem;
+  }
+
+  /* lista link di supporto, solo testo, verticale */
+  .contact-panel__secondary-item {
+    margin-bottom: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  /* link */
+  .contact-panel a,
+  .contact-panel button.contact-link {
+    color: #ffffff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .contact-panel a:hover,
+  .contact-panel button.contact-link:hover {
+    text-decoration: underline;
+  }
+
+  .contact-panel__footer {
+    margin-top: 2.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+  }
+
+  .contact-panel__footer img {
+    width: 260px;
+    height: auto;           /* regola qui la dimensione del logo */
+    opacity: 0.9;
+    display: block;
+    margin-left: 160px;
+  }
+
+  /* Bottone elenco sedi: stesso stile degli altri link del pannello */
+  .contact-link {
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ffffff;
+    background: transparent;
+    border: 0;
+    padding: 6px 0;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  /* Lista sedi nascosta di default */
+  .offices-list {
+    margin-top: 6px;
+    margin-bottom: 4px;
+    margin-left: 16px;
+    padding-left: 0;
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  /* Stato aperto */
+  .offices-list.is-open {
+    max-height: 400px; /* alza se hai tante sedi */
+    opacity: 1;
+  }
+
+  /* Singola sede */
+  .offices-list li {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #ffffff;
+  }
+
+  .offices-list li strong {
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  /* opzionale: testo indirizzo un filo più “soft” */
+  .offices-list li span {
+    opacity: 0.9;
+  }
+
+
+  @media (max-width: 900px) {
+    .contact-panel__footer {
+      justify-content: flex-start; /* o center se lo vuoi centrato su mobile */
+    }
+  }
+
+  /* ================= MAIN.CSS (INTEGRATO) ================= */
+
+  /* Reset base molto leggero */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+    color: #fff;
+  }
+
+  /* Layout principale */
+  main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  /* Sezione servizi come contenitore */
+  .services-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;      /* <- SCORRIMENTO ORIZZONTALE */
+  }
+
+  /* Link */
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    opacity: 0.8;
+  }
+
+  /* List styling di base */
+  ul {
+    list-style-position: outside;
+  }
+
+  /* ================= SERVICES-PANEL.CSS (INTEGRATO & ADATTATO) ================= */
+
+  #partners-strip * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Sezione full-bleed: occupa tutta la viewport in orizzontale */
+  #partners-strip {
+    width: 100vw;
+    margin-left: calc(50% - 50vw); /* esce dal wrapper centrale */
+    margin-right: calc(50% - 50vw);
+    background: #ffffff;
+    padding: 60px 0;
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #000;
+  }
+
+  /* Traccia orizzontale scrollabile con i box */
+  #partners-track {
+    display: flex;
+    gap: 32px;
+    padding: 40px 5vw 48px;
+    min-height: 80vh;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  #partners-track::-webkit-scrollbar {
+    height: 6px;
+  }
+  #partners-track::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  #partners-track::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 999px;
+  }
+
+  /* CARD base */
+  .service-item {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+
+    /* PRIMA era così:
+    flex: 1 0 260px;
+    */
+
+    /* Adesso: 4 card per riga + scroll orizzontale */
+    flex: 0 0 calc((100% - 3 * 32px) / 4);
+    /*        ↑    ↑          ↑
+            grow shrink   larghezza base:
+            0 = non cresce, 0 = non si restringe,
+            (100% - 3 gap da 32px) / 4 card */
+    
+    transition:
+      flex 0.7s ease-in-out,
+      transform 0.7s ease-in-out;
+  }
+
+  /* Hover: la card “esplode” e prende più spazio */
+  .service-item:hover {
+    /* <<< QUI regoli quanto si allarga la card >>> */
+    flex: 3 0 520px;
+    transform: translateY(-4px);
+  }
+
+  /* Overlay ghiaccio */
+  .service-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* effetto “ghiaccio” leggero di base */
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    transition:
+      background 0.7s ease-in-out,
+      backdrop-filter 0.7s ease-in-out,
+      -webkit-backdrop-filter 0.7s ease-in-out;
+    z-index: 1;
+  }
+
+  .service-item:hover::after {
+    /* overlay più “ghiacciato” e luminoso in hover */
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.25)
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Background per ogni slot (cambiali coi tuoi) */
+  .service-1 { background-image: url("assets/img/services/Kering.jpg"); }
+  .service-2 { background-image: url("assets/img/services/louis-vuitton.webp"); }
+  .service-3 { background-image: url("assets/img/services/Prada.avif"); }
+  .service-4 { background-image: url("assets/img/services/ferragamo.jpg"); }
+  .service-5 { background-image: url("assets/img/services/Versace.webp"); }
+  .service-6 { background-image: url("assets/img/services/Richmont.jpg"); }
+
+  /* Titolo sopra all’immagine */
+  /* Contenitore del logo brand in alto a sinistra */
+  .section-title {
+    position: absolute;
+    /* posizione di partenza: verso il basso e centrato */
+    top: 80%;              /* puoi giocare con questo valore (75–85%) */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+
+    /* animazione morbida */
+    transition:
+      top 0.6s ease,
+      left 0.6s ease,
+      transform 0.6s ease;
+  }
+  .service-item:hover .section-title {
+    top: 18px;       /* posizione finale in alto */
+    left: 24px;
+    transform: translate(0, 0);
+  }
+  /* Logo brand-partner */
+  .section-title img {
+    max-height: 40px;        /* regola l’altezza del logo */
+    width: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.7)); /* leggero glow come il testo */
+  }
+
+
+  /* Dettagli (testi) nascosti finché non allarghi la card */
+  /* --- TESTI AL CENTRO DEL BOX (DESKTOP) --- */
+  .details-list {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);  /* centro esatto */
+    width: 70%;                        /* margine dai lati */
+    z-index: 2;
+    color: #ffffff;
+
+    /* centratura contenuto */
+    display: flex;
+    justify-content: center;           /* centro verticale del contenitore */
+    align-items: center;               /* centro orizzontale del contenitore */
+    text-align: center;
+
+    /* visibilità solo su hover */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  /* livello principale: ul allineato al centro */
+  .details-list > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ogni riga/titolo */
+  .details-list > ul > li {
+    margin-bottom: 18px;
+  }
+
+
+  /* titoletti sezione: forti, verdi, più “pesanti” */
+  .details-list > ul > li > strong,
+  .details-list > ul > li > strong > a {
+    display: block;
+    font-weight: 600;
+    color: #006367;             /* verde stile reference, cambialo se vuoi */
+    text-decoration: none;
+    letter-spacing: 0.03em;
+  }
+
+  .details-list > ul > li > strong > a:hover {
+    text-decoration: underline;
+  }
+
+  /* sottoliste: i veri bullet */
+  .details-list > ul > li > ul {
+    list-style-type: disc;
+    list-style-position: outside;  /* pallino allineato all’inizio del testo */
+    padding-left: 1.4rem;          /* rientro elegante */
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.86); /* testo più leggero dei titoli */
+    font-weight: 400;
+  }
+
+  .details-list > ul > li > ul > li {
+    margin: 3px 0;                /* un po’ di aria tra le righe */
+  }
+
+  /* link nel testo: sempre bianchi, legibili */
+  .details-list a {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+
+  /* wrapper dentro la slide */
+  .sector-slide__simulator {
+    margin-top: 24px;
+  }
+
+  /* card del simulatore */
+  .simulator-card {
+    background: #f8fafc;            /* tipo bg-slate-50 */
+    border-radius: 24px;
+    border: 1px solid #e2e8f0;
+    padding: 24px;
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #0f172a;
+  }
+
+  /* singolo campo */
+  .simulator-field {
+    margin-bottom: 24px;
+  }
+
+  .simulator-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+  }
+
+  .simulator-value {
+    color: #059669; /* verde tipo emerald */
+  }
+
+  /* slider */
+  .simulator-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* box risultato */
+  .simulator-result {
+    background: #020617;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    color: #e5e7eb;
+    transition: transform 0.3s ease;
+  }
+
+  .simulator-result:hover {
+    transform: scale(1.03);
+  }
+
+  .simulator-result__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  .simulator-result__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #22c55e;
+    margin-bottom: 8px;
+  }
+
+  .simulator-result__co2 {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #1e293b;
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  .simulator-co2-icon {
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  /* nota in basso */
+  .simulator-note {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: center;
+    font-style: italic;
+  }
+  .sector-slide__simulator {
+    position: relative;
+    z-index: 5;
+  }
+
+  .sector-slide__simulator,
+  .sector-slide__simulator * {
+    pointer-events: auto;
+  }
+
+  /* ================== TYPO PARTNERS – OVERRIDE FINALE ================== */
+
+/* sicurezza: tutto Futura dentro la strip */
+  #partners-strip,
+  #partners-strip * {
+    font-family: "Futura", system-ui, -apple-system, BlinkMacSystemFont, "Futura", sans-serif;
+  }
+
+  /* Contenitore testo */
+  #partners-strip .details-list {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #f5f5f5;
+  }
+
+  /* livello principale: niente bullet, solo blocchi separati */
+  #partners-strip .details-list > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* distanza verticale tra i “blocchi” (paragrafi di sezione) */
+  #partners-strip .details-list > ul > li {
+    margin-bottom: 22px;       /* più aria tra i gruppi */
+  }
+
+  /* titoletti verdi, più forti */
+  #partners-strip .details-list > ul > li > strong,
+  #partners-strip .details-list > ul > li > strong > a {
+    display: block;
+    font-size: 17px;
+    font-weight: 700;
+    color: #006367;            /* verde stile reference */
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    margin-bottom: 6px;        /* spazio tra titolo e primi bullet */
+  }
+
+  #partners-strip .details-list > ul > li > strong > a:hover {
+    text-decoration: underline;
+  }
+
+  /* sottoliste con bullet allineati */
+  #partners-strip .details-list ul ul {
+    list-style-type: disc;
+    list-style-position: outside;   /* il pallino sta fuori, testo allineato */
+    margin: 0 0 0 1.3rem;           /* indent costante */
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;               /* testo più leggero dei titoletti */
+    line-height: 1.5;
+    color: #f5f5f5;
+  }
+
+  /* un filo di spazio tra i bullet */
+  #partners-strip .details-list ul ul li {
+    margin: 3px 0;
+    padding-left: 0.1rem;
+  }
+
+  /* link dentro il testo: niente colori strani, restano chiari */
+  #partners-strip .details-list a {
+    color: #f5f5f5;
+  }
+
+
+  /* ====== MOSTRA TESTO SU HOVER DEL BOX ====== */
+  .service-item:hover .details-list {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Griglia loghi partner (fino a 4) */
+  .partners-logos {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    align-items: center;
+  }
+  .partners-logos img {
+    max-width: 100%;
+    max-height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
+  }
+
+  /* Loghi partner: nascosti di default (desktop) */
+  .partners-logos {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition:
+      opacity 0.4s ease,
+      visibility 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  /* Mostra i loghi quando la card è in hover */
+  .service-item:hover .partners-logos {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Mobile / tablet: niente “allargamento”, tutte a blocchi */
+  @media (max-width: 900px) {
+    #partners-strip {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+    }
+    #partners-track {
+      flex-direction: column;
+      overflow-x: hidden;
+      padding: 0 24px 40px;
+    }
+    .service-item {
+      flex: none;
+      width: 100%;
+      min-height: 360px;
+    }
+    .service-item:hover {
+      flex: none;
+      transform: none;
+    }
+    .details-list {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      inset: 80px 24px 120px 24px;
+    }
+    .partners-logos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      opacity: 1;
+      visibility: visible;
+      transform: none;   /* niente animazione su mobile */
+    }
+  }
+  /* ===== MODALE NEWSLETTER ===== */
+  .newsletter-modal {
+    position: fixed;
+    inset: 0;
+    display: none;              /* nascosto di default */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: inherit;
+  }
+
+  .newsletter-modal.is-visible {
+    display: flex;
+  }
+
+  .newsletter-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .newsletter-modal__dialog {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 640px;
+    width: 92%;
+    padding: 28px 28px 24px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  }
+
+  .newsletter-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .newsletter-modal__title {
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .newsletter-modal__subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 18px;
+  }
+
+  .newsletter-modal__form {
+    margin-top: 8px;
+  }
+
+  .newsletter-modal__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 20px;
+  }
+
+  .form-group {
+    text-align: left;
+    font-size: 13px;
+  }
+
+  .form-group--full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #006367;
+    box-shadow: 0 0 0 1px rgba(0, 99, 103, 0.15);
+  }
+
+  .newsletter-modal__submit {
+    margin-top: 18px;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .newsletter-modal__submit:hover {
+    background: #006367;
+    box-shadow: 0 10px 25px rgba(0, 99, 103, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .newsletter-modal__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* ===== MODALE LEGALE ===== */
+  .legal-modal {
+    position: fixed;
+    inset: 0;
+    display: none;              /* nascosta di default */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: inherit;
+  }
+
+  .legal-modal.is-visible {
+    display: flex;
+  }
+
+  .legal-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .legal-modal__dialog {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 900px;
+    width: 92%;
+    max-height: 80vh;
+    padding: 28px 28px 24px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+  }
+
+  .legal-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .legal-modal__title {
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+
+  .legal-modal__content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  /* opzionale: stile base per i testi dentro */
+  .legal-modal__content h2,
+  .legal-modal__content h3 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .legal-modal__content p {
+    margin-bottom: 10px;
+  }
+
+  .legal-modal__content ul {
+    margin: 8px 0 12px 18px;
+  }
+  /* nasconde i testi “sorgente” in fondo pagina */
+  .legal-source {
+    display: none;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff !important;
+  }
+  </style>
+</head>
+<body>
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="header-left">
+      <!--<button type="button" class="menu-toggle" aria-label="Apri il menu">
+        <span></span><span></span><span></span>
+      </button> 
+      <span>Menu</span> -->
+    </div>
+
+    <div class="header-logo">
+      <img
+        src="assets/img/logo-tuo-brand-white.png"
+        alt="Nome del tuo brand"
+        data-src-default="assets/img/logo-tuo-brand-white.png"
+        data-src-compact="assets/img/logo-tuo-brand-green.png"
+      />
+    </div>
+
+    <div class="header-right">
+      <button
+        type="button"
+        class="header-link"
+        id="openContactPanel"
+      >
+        CONTACT US
+      </button>
+      <!--<button
+        type="button"
+        class="icon-circle"
+        aria-label="Cerca nel sito"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle
+            cx="11"
+            cy="11"
+            r="6"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
+          <line
+            x1="15"
+            y1="15"
+            x2="20"
+            y2="20"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>-->
+    </div>
+  </header>
+
+  <!-- ========== HERO INTRO ========== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-video-wrap">
+      <video
+        class="hero-video"
+        id="heroVideo"
+        src="assets/video/hero-intro.mp4"
+        poster="assets/img/hero-poster.jpg"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+      <div class="hero-gradient"></div>
+    </div>
+
+    <div class="hero-controls">
+      <button
+        type="button"
+        class="circle-control"
+        id="playPauseBtn"
+        aria-pressed="false"
+        aria-label="Metti in pausa il video"
+      >
+        <svg id="iconPlay" viewBox="0 0 24 24">
+          <path d="M7 4l11 8-11 8z"></path>
+        </svg>
+        <svg id="iconPause" class="icon--hidden" viewBox="0 0 24 24">
+          <path d="M6 4h4v16H6zM14 4h4v16h-4z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="hero-content">
+      <span class="hero-eyebrow">FGB is pleased to introduce</span>
+      <h1 class="hero-title">THE HOLIDAY SEASON</h1>
+      <div class="hero-ctas">
+        <a href="https://fgb-studio.com/" class="hero-link">STUDIO</a>
+        <a href="#monitoring-section" class="hero-link">MONITORING</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SEZIONE SETTORI CHE SERVIAMO ========== -->
+  <section id="monitoring-section" class="sectors-section">
+    <h2 class="sectors-section__title">WHAT'S NEW FOR 2026</h2>
+    <p class="sectors-section__subtitle">
+      Discover our selection of new solutions tailored to you and to the future of sustainable real estate.
+    </p>
+
+    <div class="sectors-carousel">
+      <button
+        class="sectors-carousel__arrow sectors-carousel__arrow--prev"
+        aria-label="Indietro"
+        type="button"
+      >
+        <span>&lsaquo;</span>
+      </button>
+      <button
+        class="sectors-carousel__arrow sectors-carousel__arrow--next"
+        aria-label="Avanti"
+        type="button"
+      >
+        <span>&rsaquo;</span>
+      </button>
+
+      <div class="sectors-carousel__track" id="sectorsTrack">
+        <!-- Slide 1 -->
+        <article class="sector-slide is-active">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/Energy.jpg"
+            alt="Energy Monitoring"
+          />
+          <h3 class="sector-slide__title">
+            <img
+              src="assets/img/sectors/welcome-greeny.png"
+              alt="Welcome Greeny"
+              class="sector-slide__title-image"
+            />
+          </h3>
+          <!--<div class="sector-slide__cta">Scopri</div>-->
+          <p class="sector-slide__description">
+            Choose Greney, Manage your Energy.
+            Control your portfolio energy consumptiom, get an added value, Improve operations, Find inefficiency, Reach Awards.
+          </p>
+        </article>
+
+        <!-- Slide 2 -->
+        <article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/Air.jpg"
+            alt="Air Monitoring"
+          />
+          <h3 class="sector-slide__title">
+            <img
+              src="assets/img/sectors/welcome-clair.png"
+              alt="Welcome Greeny"
+              class="sector-slide__title-image"
+            />
+          </h3>
+          <!--<div class="sector-slide__cta">Scopri</div>-->
+          <p class="sector-slide__description">
+            Choose Clair, Breathe Clean Air.
+Keep the air quality of your spaces under control and ensure a high standard of wellbeing across your assets.
+          </p>
+        </article>
+
+        <!-- Slide 3 -->
+        <article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/Project.jpg"
+            alt="Project tracking"
+          />
+          <h3 class="sector-slide__title">
+            <img
+              src="assets/img/sectors/welcome-project.png"
+              alt="Welcome Greeny"
+              class="sector-slide__title-image"
+            />
+          </h3>
+          <!--<div class="sector-slide__cta">Scopri</div>-->
+          <p class="sector-slide__description">
+            We guide you in achieving the most prestigious international certifications to increase the value of your property.
+Track the progress of your projects all the way to completion and customise your management reports.
+          </p>
+        </article>
+
+        <!-- Slide 4 -->
+        <article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/Glass.jpg"
+            alt="Project tracking"
+          />
+          <h3 class="sector-slide__title">
+            <img
+              src="assets/img/sectors/welcome-future.png"
+              alt="Welcome Greeny"
+              class="sector-slide__title-image"
+            />
+          <!--</h3>
+          <p class="sector-slide__description">
+            L'adeguamento energetico non è solo un obbligo normativo, è un investimento strategico. 
+            Utilizza il nostro simulatore basato sui dati medi del settore immobiliare (Retail &amp; Office).
+            Trasformiamo i tuoi asset immobiliari con tecnologie all'avanguardia per l'efficienza energetica. 
+            Partner di eccellenza per il settore lusso e retail.
+          </p>-->
+
+          <!-- SIMULATORE DI RISPARMIO -->
+          <!--<div class="sector-slide__simulator">
+
+            <div class="simulator-card">
+               Input 1: Superficie
+              <div class="simulator-field">
+                <label class="simulator-label">
+                  <span>Superficie Immobile (mq)</span>
+                  <span id="sqm-display" class="simulator-value">1.300 mq</span>
+                </label>
+                <input
+                  type="range"
+                  id="sqm-slider"
+                  min="100"
+                  max="10000"
+                  step="100"
+                  value="1000"
+                  class="simulator-slider"
+                />
+              </div>
+
+             Input 2: Spesa annua
+              <div class="simulator-field">
+                <label class="simulator-label">
+                  <span>Spesa Energetica Annua Attuale (&euro;)</span>
+                  <span id="cost-display" class="simulator-value">&euro; 50.000</span>
+                </label>
+                <input
+                  type="range"
+                  id="cost-slider"
+                  min="10000"
+                  max="1000000"
+                  step="5000"
+                  value="50000"
+                  class="simulator-slider"
+                />
+              </div>
+
+              Risultato 
+              <div class="simulator-result">
+                <p class="simulator-result__label">
+                  Risparmio Annuo Stimato
+                </p>
+                <div id="savings-result" class="simulator-result__value">
+                  &euro; 15.000
+                </div>
+                <div class="simulator-result__co2">
+                  <span class="simulator-co2-icon">CO₂</span>
+                  <span id="co2-result">
+                    Riduzione CO2 stimata: 12.0 Tonnellate/anno
+                  </span>
+                </div>
+              </div>
+
+              <p class="simulator-note">
+                *Stima basata su un efficientamento medio del 30% (Standard LEED/BREEAM).
+              </p>
+            </div>
+          </div>-->
+        </article>
+
+        <!-- Slide 5 -->
+        <!--<article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/traslochi.jpg"
+            alt="Imprese di Traslochi"
+          />
+          <h3 class="sector-slide__title">Imprese di Traslochi</h3>
+          <div class="sector-slide__cta">Scopri</div>
+          <p class="sector-slide__description">
+            Kit completi per traslochi professionali: scatole rinforzate, protezioni
+            e materiali di riempimento per ogni tipologia di oggetto.
+          </p>
+        </article>-->
+
+        <!-- Slide 6 -->
+        <!--<article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/fiere-negozi.jpg"
+            alt="Allestimento di fiere e negozi"
+          />
+          <h3 class="sector-slide__title">Allestimento di fiere e negozi</h3>
+          <div class="sector-slide__cta">Scopri</div>
+          <p class="sector-slide__description">
+            Imballi studiati per materiali espositivi e arredi temporanei,
+            perfetti per montaggi e smontaggi rapidi.
+          </p>
+        </article>-->
+
+        <!-- Slide 7 -->
+         <!--<article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/stampa-grafica.jpg"
+            alt="Industria Stampa e Grafica"
+          />
+          <h3 class="sector-slide__title">Industria Stampa e Grafica</h3>
+         <div class="sector-slide__cta">Scopri</div>
+          <p class="sector-slide__description">
+            Protezione dedicata a stampati, cataloghi e materiale promozionale,
+            per consegne impeccabili al cliente finale.
+          </p>
+        </article>-->
+
+        <!-- Slide 8 -->
+        <!--<article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/mobile.jpg"
+            alt="Industria del Mobile"
+          />
+          <h3 class="sector-slide__title">Industria del Mobile</h3>
+          <div class="sector-slide__cta">Scopri</div>
+          <p class="sector-slide__description">
+            Imballaggi su misura per mobili e arredi, pensati per ridurre
+            urti, graffi e danneggiamenti durante il trasporto.
+          </p>
+        </article>-->
+
+        <!-- Slide 9 -->
+        <!--<article class="sector-slide">
+          <img
+            class="sector-slide__image"
+            src="assets/img/sectors/bricolage-faidate.jpg"
+            alt="Bricolage e Fai da te"
+          />
+          <h3 class="sector-slide__title">Bricolage e Fai da te</h3>
+          <div class="sector-slide__cta">Scopri</div>
+          <p class="sector-slide__description">
+            Soluzioni pensate per la distribuzione retail e il fai da te,
+            con packaging pratici, resistenti e facilmente stoccabili.
+          </p>
+        </article>-->
+      </div>
+    </div>
+  </section>
+  
+  <!-- PARTNERS -->
+
+  <section id="partners-strip">
+    <div id="partners-track">
+
+      <!-- SLOT 1 -->
+      <article class="service-item service-1">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Kering-logo.png" alt="Partner1">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Supporto per le certificazione LEED ID+C, BD+C e O&M</a></strong>
+             <ul>
+                <li>1000 progetti tra LEED, WELL, RESET, BREEAM, EDGE e altre certificazioni.</li>
+                <li>Strategie per emissioni nette zero.</li>
+                <li>Regolamentazioni sostenibili EU e US.</li>
+                <li>Monitoraggio puntuale per salute e benessere.</li>
+              </ul>
+            </li>
+            <li>
+              <strong><a href="#">Supporto per le certificazione WELL</a></strong>
+              <ul>
+                <li>Modellazione energetica, audit Energetici ed altro ancora.</li>
+                <li>Commissioning, retro-commissioning e audit energetici.</li>
+              </ul>
+            </li>
+            <li>
+              <strong><a href="#">Commissionig & WELL performance testing</a></strong>
+            </li>
+            <li>
+              <strong><a href="#">Monitoraggio dei consumi energetici su scala globale per ridurre l'impatto ambientale</a></strong>
+            </li>
+            <li>
+              <strong><a href="#">Consulenza strategica su soluzioni di benessere all'interno dei propri Buildings</a></strong>
+              <ul>
+                <li>Qualità dell’aria e dell’acqua, suono, luce, comfort termico.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-2">
+          <img src="assets/img/partners/slot1-logo3.png" alt="Partner slot 1-3">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2"> 
+        </div>
+      </article>
+
+      <!-- SLOT 2 -->
+      <article class="service-item service-2">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/LVMH-logo.png" alt="Partner2">
+        </div>
+
+        <div class="details-list">
+          <!--<ul>
+            <li>
+              <strong><a href="#">Soluzioni per edifici intelligenti</a></strong>
+              <ul>
+                <li>Monitoraggio in tempo reale delle prestazioni dell’edificio.</li>
+                <li>Supporto a piattaforme e certificazioni.</li>
+              </ul>
+            </li>
+            <li>
+              <strong><a href="#">Analisi avanzata dei dati</a></strong>
+              <ul>
+                <li>Dashboard centralizzate e reportistica automatizzata.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+          <img src="assets/img/partners/slot1-logo5.png" alt="Partner slot 1-4">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">          
+        </div>
+      </article>
+
+      <!-- SLOT 3 -->
+      <article class="service-item service-3">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Prada-Logo.png" alt="Partner3">
+        </div>
+
+        <div class="details-list">
+          <!--<ul>
+            <li>
+              <strong><a href="#">IEQ &amp; WELL performance testing</a></strong>
+              <ul>
+                <li>Qualità dell’aria e dell’acqua, suono, luce, comfort termico.</li>
+              </ul>
+            </li>
+            <li>
+              <strong><a href="#">Collaudi e verifiche energetiche</a></strong>
+              <ul>
+                <li>Commissioning, retro-commissioning e audit energetici.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">
+        </div>
+      </article>
+
+      <!-- SLOT 4 -->
+      <article class="service-item service-4">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Salvatore_Ferragamo_logo.png" alt="Partner4">
+        </div>
+
+        <div class="details-list">
+          <!--<ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">
+        </div>
+      </article>
+
+      <!-- SLOT 5 -->
+      <article class="service-item service-5">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Capri_Holdings_Logo (1).svg" alt="Partner5">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">
+        </div>
+      </article>
+
+      <!-- SLOT 6 -->
+      <article class="service-item service-6">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Richemont_Logo.svg (1).png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+
+        <div class="partners-logos">
+          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">
+        </div>
+      </article>
+
+    </div>
+  </section>
+  <script>
+    // HERO VIDEO PLAY/PAUSE
+    const video = document.getElementById("heroVideo");
+    const hero = document.getElementById("hero");
+
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const iconPlay = document.getElementById("iconPlay");
+    const iconPause = document.getElementById("iconPause");
+
+    playPauseBtn.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+        hero.classList.remove("hero--paused");
+        playPauseBtn.setAttribute("aria-pressed", "false");
+        playPauseBtn.setAttribute("aria-label", "Metti in pausa il video");
+        iconPlay.classList.add("icon--hidden");
+        iconPause.classList.remove("icon--hidden");
+      } else {
+        video.pause();
+        hero.classList.add("hero--paused");
+        playPauseBtn.setAttribute("aria-pressed", "true");
+        playPauseBtn.setAttribute("aria-label", "Avvia il video");
+        iconPlay.classList.remove("icon--hidden");
+        iconPause.classList.add("icon--hidden");
+      }
+    });
+  </script>
+
+  <script>
+    // CAROUSEL SETTORI
+    (function () {
+      const track   = document.getElementById("sectorsTrack");
+      const slides  = Array.from(track.querySelectorAll(".sector-slide"));
+      const prevBtn = document.querySelector(".sectors-carousel__arrow--prev");
+      const nextBtn = document.querySelector(".sectors-carousel__arrow--next");
+
+      if (!track || !slides.length || !prevBtn || !nextBtn) return;
+
+      let currentIndex = 0;
+
+      function setActiveSlide(index) {
+        currentIndex = (index + slides.length) % slides.length;
+
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("is-active", i === currentIndex);
+        });
+
+        slides[currentIndex].scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest"
+        });
+      }
+
+      prevBtn.addEventListener("click", () => {
+        setActiveSlide(currentIndex - 1);
+      });
+
+      nextBtn.addEventListener("click", () => {
+        setActiveSlide(currentIndex + 1);
+      });
+
+      slides.forEach((slide, index) => {
+        slide.addEventListener("click", () => {
+          setActiveSlide(index);
+        });
+      });
+
+      window.addEventListener("load", () => {
+        setActiveSlide(0);
+      });
+
+      window.addEventListener("resize", () => {
+        slides[currentIndex].scrollIntoView({
+          behavior: "auto",
+          inline: "center",
+          block: "nearest"
+        });
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      const header = document.querySelector(".site-header");
+      const hero   = document.querySelector(".hero-section");
+      const logoImg = document.querySelector(".header-logo img");
+
+      if (!header || !hero || !logoImg) return;
+
+      const defaultSrc = logoImg.getAttribute("data-src-default")  || logoImg.src;
+      const compactSrc = logoImg.getAttribute("data-src-compact") || defaultSrc;
+
+      function getThreshold() {
+        // punto in cui il logo entra nella barra
+        return hero.offsetHeight * 0.35;
+      }
+
+      let threshold = 0;
+
+      function updateThreshold() {
+        threshold = getThreshold();
+        onScroll(); // riallinea stato all'avvio/resize
+      }
+
+      function onScroll() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > threshold) {
+          // stato compatto
+          header.classList.add("site-header--compact");
+          logoImg.src = compactSrc;
+        } else {
+          // stato “hero” grande
+          header.classList.remove("site-header--compact");
+          logoImg.src = defaultSrc;
+        }
+      }
+
+      window.addEventListener("load", updateThreshold);
+      window.addEventListener("resize", updateThreshold);
+      window.addEventListener("scroll", onScroll);
+    })();
+  </script>
+  <div
+    class="contact-panel"
+    id="contactPanel"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="contactPanelTitle"
+  >
+    <div class="contact-panel__overlay" id="contactPanelOverlay"></div>
+
+    <div class="contact-panel__container">
+      <header class="contact-panel__header">
+        <h2 class="contact-panel__title" id="contactPanelTitle">
+          Contattaci
+        </h2>
+        <button
+          type="button"
+          class="contact-panel__close"
+          id="closeContactPanel"
+          aria-label="Chiudi pannello Contattaci"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M6 5l13 13-1 1L5 6zM5 18L18 5l1 1L6 19z"
+            ></path>
+          </svg>
+        </button>
+      </header>
+      <div class="contact-panel__body">
+        <div class="contact-panel__inner">
+          <p class="contact-panel__intro">
+            Our team is available to support you with projects, monitoring and services.
+          </p>
+
+          <!-- CONTATTI PRINCIPALI, UNO SOTTO L'ALTRO -->
+          <ul class="contact-panel__list">
+            <li class="contact-panel__item">
+              <span class="contact-panel__icon">
+                <!-- telefono -->
+                <img src="assets/img/contatti//phone/phone-white.png"
+                    alt=""
+                    width="24"
+                    height="24">
+              </span>
+              <div>
+                <div class="contact-panel__label-main">
+                  <!-- rimpiazzerai con il tuo numero -->
+                  <a href="tel:">+44 75545-93399</a>
+                </div>
+                <div class="contact-panel__label-sub">
+                  Mon-Fri, 9:00–18:00
+                </div>
+              </div>
+            </li>
+
+            <li class="contact-panel__item">
+              <span class="contact-panel__icon">
+                <!-- email -->
+                <img src="assets/img/contatti//mail/mail.png"
+                    alt=""
+                    width="20"
+                    height="20">
+              </span>
+              <div>
+                <div class="contact-panel__label-main">
+                  <a href="mailto:info@tuodominio.com">FGB@fgb-studio.com</a>
+                </div>
+                <div class="contact-panel__label-sub">
+                  Contact us for general enquiries or project requests.
+                </div>
+              </div>
+            </li>
+
+            <li class="contact-panel__item">
+              <span class="contact-panel__icon">
+                <!-- WhatsApp -->
+                <img src="assets/img/contatti//whatsapp/whatsapp white.png"
+                    alt=""
+                    width="20"
+                    height="20">
+              </span>
+              <div>
+                <div class="contact-panel__label-main">
+                  <a href="#" target="_blank" rel="noopener">WhatsApp</a>
+                </div>
+                <div class="contact-panel__label-sub">
+                  Contact us via web
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <hr class="contact-panel__divider" />
+
+          <!-- LINK DI SUPPORTO, SOLO TESTO, VERTICALI -->
+          <ul class="contact-panel__list">
+            <li class="contact-panel__secondary-item">
+              <button type="button" class="contact-link">
+                Need Help?
+              </button>
+            </li>
+            <li class="contact-panel__secondary-item">
+              <button type="button" class="contact-link">
+                FAQ
+              </button>
+            </li>
+            <li class="contact-panel__secondary-item">
+              <button type="button" class="contact-link">
+                Assistance
+              </button>
+            </li>
+            <li class="contact-panel__secondary-item">
+                <button
+                  class="contact-link has-chevron"
+                  id="btn-offices"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  Our Offices
+                </button>
+
+                <!-- Lista sedi (inizialmente chiusa) -->
+                <ul id="offices-list" class="offices-list">
+                  <li>
+                    <strong>AIX-EN-PROVENCE</strong><br>
+                    <span> </span>
+                  </li>
+                  <li>
+                    <strong>AMSTERDAM</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>DUBAI</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>HO CHI MINH</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>LONDON</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>LOS ANGELES</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>MIAMI</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>MILAN</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>NEW YORK</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>ROME</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>SHANGHAI</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>SINGAPORE</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>TAICHUNG</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
+                    <strong>TOKYO</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="contact-panel__footer">
+        <img
+          src="assets/img/Logo/Logopayoff/PNG/white.png"
+          alt="Future Green Building"
+        />
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const panel   = document.getElementById("contactPanel");
+      const openBtn = document.getElementById("openContactPanel");
+      const closeBtn = document.getElementById("closeContactPanel");
+      const overlay = document.getElementById("contactPanelOverlay");
+
+      if (!panel || !openBtn || !closeBtn || !overlay) return;
+
+      function openPanel() {
+        panel.classList.add("is-open");
+        panel.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePanel() {
+        panel.classList.remove("is-open");
+        panel.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      openBtn.addEventListener("click", openPanel);
+      closeBtn.addEventListener("click", closePanel);
+      overlay.addEventListener("click", closePanel);
+
+      // ESC per chiudere
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && panel.classList.contains("is-open")) {
+          closePanel();
+        }
+      });
+    })();
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("btn-offices");
+      const list = document.getElementById("offices-list");
+
+      if (!btn || !list) return;
+
+      btn.addEventListener("click", function () {
+        const isOpen = list.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    });
+  </script>
+  <script>
+    (function () {
+      const sqmSlider = document.getElementById('sqm-slider');
+      const costSlider = document.getElementById('cost-slider');
+      const sqmDisplay = document.getElementById('sqm-display');
+      const costDisplay = document.getElementById('cost-display');
+      const savingsResult = document.getElementById('savings-result');
+      const co2Result = document.getElementById('co2-result');
+
+      function formatEuro(value) {
+        return '€ ' + value.toLocaleString('it-IT', { maximumFractionDigits: 0 });
+      }
+
+      function updateSimulator() {
+        const sqm = parseInt(sqmSlider.value, 10);
+        const cost = parseInt(costSlider.value, 10);
+
+        // label a destra degli slider
+        sqmDisplay.textContent = sqm.toLocaleString('it-IT') + ' mq';
+        costDisplay.textContent = formatEuro(cost);
+
+        // ipotesi: 30% di risparmio
+        const savings = cost * 0.30;
+        savingsResult.textContent = formatEuro(Math.round(savings));
+
+        // ipotesi: 0,0002 tCO2 per € risparmiato (valore fittizio)
+        const co2 = savings * 0.0002;
+        co2Result.textContent =
+          'Riduzione CO2 stimata: ' + co2.toFixed(1) + ' Tonnellate/anno';
+      }
+
+      // event listener sugli slider
+      sqmSlider.addEventListener('input', updateSimulator);
+      costSlider.addEventListener('input', updateSimulator);
+
+      // inizializzazione
+      updateSimulator();
+    })();
+  </script>
+
+
+
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-newsletter">
+          <h4 class="footer-newsletter__title">
+            Subscribe to our newsletter
+          </h4>
+
+          <form class="footer-newsletter__form" action="#" method="post" novalidate>
+            <div class="footer-input-wrap">
+              <input
+                type="email"
+                name="newsletter_email"
+                class="footer-input"
+                placeholder="Fill your e-mail address*"
+                required
+              />
+              <button
+                type="button"
+                class="footer-newsletter__submit"
+                id="open-newsletter-form"
+              >
+                Subscribe
+              </button>
+            </div>
+
+            <label class="footer-consent">
+              <input type="checkbox" name="newsletter_consent" required />
+              <span>
+                Clicking on "Subsription", confirm to have written the
+                <a href="#privacy">Privacy</a> and that you want to receive
+                the newsletter e marketing communications.
+              </span>
+            </label>
+          </form>
+
+          <ul class="footer-social" aria-label="Seguici sui social">
+            <li>
+              <a href="https://facebook.com/fgb.studio/" aria-label="Facebook" target="_blank" rel="noopener">
+                <img src="assets/img/icons/facebook.png" alt="" />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/fgb.studio/" aria-label="Instagram" target="_blank" rel="noopener">
+                <img src="assets/img/icons/instagram.png" alt="" />
+              </a>
+            </li>
+            <li>
+              <a href="https://it.linkedin.com/company/fgb-studio-future-green-building" aria-label="LinkedIn" target="_blank" rel="noopener">
+                <img src="assets/img/icons/linkedin.png" alt="" />
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener">
+                <img src="assets/img/icons/youtube.png" alt="" />
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-columns">
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-title">Need Help?</h4>
+            <ul class="footer-nav-list">
+              <li><a href="tel:+447554593399">Call us +44 75545-93399</a></li>
+              <li><a href="https://wa.me/447554593399" target="_blank">Contuct us on WhatsApp</a></li>
+              <li><a href="#contatti">Contacts</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-title">Servicies</h4>
+            <ul class="footer-nav-list">
+              <li><a href="#monitoring-section">Servicies</a></li>
+              <li><a href="#monitoring-section">Products</a></li>
+              <li><a href="#partners-strip">Partners</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-title">Company</h4>
+            <ul class="footer-nav-list">
+              <li><a href="https://fgb-studio.com/">Who We are</a></li>
+              <li><a href="https://fgb-studio.com/">Sustainability</a></li>
+              <li><a href="mailto:fgb@fgb-studio.com">Work with us</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <h4 class="footer-nav-title">Legale</h4>
+            <ul class="footer-nav-list">
+              <li><a href="#privacy-policy" data-legal="privacy">Privacy</a></li>
+              <li><a href="#cookie-policy" data-legal="cookie">Cookie Policy</a></li>
+              <li><a href="#termini-condizioni" data-legal="terms">Terms and conditions</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">
+          © FGB studio 2025<!-- <span>P.IVA 00000000000</span>-->
+        </p>
+
+        <div class="footer-bottom-cta">
+          <a href="#store-locator" class="footer-cta-link"> 
+            AIX-EN-PROVENCE | AMSTERDAM | DUBAI | HO CHI MINH | LONDON | LOS ANGELES | MIAMI | MILAN | NEW YORK | ROME | SHANGHAI | SINGAPORE | TAICHUNG | TOKYO
+          </a>
+        </div>
+        <div class="footer-bottom-logo">
+          <img src="assets/img/Logo/Logopayoff/PNG/green.png" alt="Future Green Building" />
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- MODALE ISCRIZIONE NEWSLETTER DETTAGLIATA -->
+  <div class="newsletter-modal" id="newsletter-modal" aria-hidden="true">
+    <div class="newsletter-modal__overlay"></div>
+
+    <div class="newsletter-modal__dialog" role="dialog" aria-modal="true">
+      <button class="newsletter-modal__close" aria-label="Chiudi form">
+        &times;
+      </button>
+
+      <h3 class="newsletter-modal__title">Subscribe to the newsletter</h3>
+      <p class="newsletter-modal__subtitle">
+        Fill in the form to receive updates on projects, new developments and insights.
+      </p>
+
+      <form id="newsletter-detail-form" class="newsletter-modal__form" action="mailto:fgb@fgb-studio.com.com" method="POST" enctype="text/plain">
+        <div class="newsletter-modal__grid">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" name="nome" required />
+          </div>
+
+          <div class="form-group">
+            <label>Cognome</label>
+            <input type="text" name="cognome" required />
+          </div>
+
+          <div class="form-group">
+            <label>Azienda</label>
+            <input type="text" name="company" required />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required />
+          </div>
+
+          <div class="form-group form-group--full">
+            <label>Numero di telefono (facoltativo)</label>
+            <input type="tel" name="phone" />
+          </div>
+
+          <div class="form-group form-group--full">
+            <label>Messaggio</label>
+            <textarea name="message" rows="4" placeholder="Scrivici le tue esigenze..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="newsletter-modal__submit">
+          Send subscription request
+        </button>
+      </form>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const openBtn = document.getElementById("open-newsletter-form");
+      const modal = document.getElementById("newsletter-modal");
+      if (!openBtn || !modal) return;
+
+      const closeBtn = modal.querySelector(".newsletter-modal__close");
+      const overlay = modal.querySelector(".newsletter-modal__overlay");
+      const form = document.getElementById("newsletter-detail-form");
+
+      function openModal() {
+        modal.classList.add("is-visible");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-visible");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+      overlay.addEventListener("click", closeModal);
+
+      // ESC per chiudere
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("is-visible")) {
+          closeModal();
+        }
+      });
+
+      // Submit finto (qui poi colleghi il backend / email service)
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert(
+          "Thank you! We’ve received your newsletter subscription request."
+        );
+        form.reset();
+        closeModal();
+      });
+    })();
+  </script>
+  <!-- CONTENUTI LEGALI NASCOSTI -->
+  <div id="legal-source" class="legal-source">
+    <section id="privacy-policy" class="legal-section">
+      <h2>Privacy Policy</h2>
+      <p><strong>Last updated:</strong> 01 December 2025</p>
+
+      <h3>1. Who we are</h3>
+      <p>
+        This Privacy Policy describes how <strong>FGB studio * Zmyrna limited</strong> 
+        ("we", "us", "our") collects, uses and protects personal data in connection 
+        with the website <strong>www.monitoring@fgb-studio.com</strong> (the "Website") and our services.
+      </p>
+      <p>
+        <strong>Data Controller:</strong> FGB studio * Zmyrna limited<br>
+        <strong>Registered office:</strong> The Shrubberies - George Lane - London E18 1BG – UK<br>
+        <strong>Email:</strong> FGB@fgb-studio.com<br>
+        <strong>Phone:</strong> + 44.75545-93399
+      </p>
+      <p>
+        If you have any questions about this Privacy Policy or how we process your data, 
+        you can contact us using the details above.
+      </p>
+
+      <h3>2. What data we collect</h3>
+      <p>We may collect the following categories of personal data:</p>
+
+      <h4>2.1 Contact and identification data</h4>
+      <ul>
+        <li>First name and last name</li>
+        <li>Email address</li>
+        <li>Company name and role</li>
+        <li>Phone number (where provided)</li>
+      </ul>
+
+      <h4>2.2 Communication data</h4>
+      <ul>
+        <li>Content of messages sent via our contact form or by email</li>
+        <li>Requests for information, proposals, support or collaboration</li>
+        <li>Newsletter subscription preferences</li>
+      </ul>
+
+      <h4>2.3 Technical and usage data</h4>
+      <ul>
+        <li>IP address</li>
+        <li>Browser type and version</li>
+        <li>Device information and operating system</li>
+        <li>Pages visited, time and duration of visits</li>
+        <li>Referrer URL and interaction with the Website</li>
+      </ul>
+      <p>
+        These are mainly collected via cookies and similar technologies. 
+        For more information, see our <a href="#cookie-policy">Cookie Policy</a>.
+      </p>
+
+      <h4>2.4 Newsletter and marketing data</h4>
+      <ul>
+        <li>Newsletter subscription status</li>
+        <li>Topics of interest where specified</li>
+        <li>Interactions with newsletters (opens, clicks, unsubscribes)</li>
+      </ul>
+
+      <p>
+        We do not intentionally collect special categories of personal data 
+        (e.g. health data, political opinions, religious beliefs) via this Website.
+      </p>
+
+      <h3>3. How we use your data and legal basis</h3>
+      <p>We process personal data for the following purposes and legal bases, in accordance with the GDPR:</p>
+
+      <h4>3.1 Responding to your requests</h4>
+      <p>
+        To answer emails, contact form submissions or other enquiries.<br>
+        <strong>Legal basis:</strong> Performance of a contract or pre-contractual measures (Art. 6(1)(b) GDPR).
+      </p>
+
+      <h4>3.2 Providing our services</h4>
+      <p>
+        Managing relationships with clients, partners and suppliers, and preparing proposals and offers.<br>
+        <strong>Legal basis:</strong> Performance of a contract (Art. 6(1)(b) GDPR) and legitimate interests (Art. 6(1)(f) GDPR).
+      </p>
+
+      <h4>3.3 Newsletter and marketing communications</h4>
+      <p>
+        Sending newsletters, updates, invitations to events or information about our services.<br>
+        <strong>Legal basis:</strong> Your consent (Art. 6(1)(a) GDPR).<br>
+        You can withdraw your consent at any time via the unsubscribe link or by contacting us.
+      </p>
+
+      <h4>3.4 Website security and performance</h4>
+      <p>
+        Monitoring and improving the functioning and security of the Website, 
+        and detecting misuse or attempted fraud.<br>
+        <strong>Legal basis:</strong> Legitimate interests (Art. 6(1)(f) GDPR).
+      </p>
+
+      <h4>3.5 Compliance with legal obligations</h4>
+      <p>
+        Fulfilling accounting, tax or regulatory requirements.<br>
+        <strong>Legal basis:</strong> Legal obligation (Art. 6(1)(c) GDPR).
+      </p>
+
+      <h3>4. How long we keep your data</h3>
+      <p>We retain personal data only for as long as necessary for the purposes described above, or as required by law. Indicatively:</p>
+      <ul>
+        <li><strong>Contact requests / emails:</strong> up to 24 months from our last interaction.</li>
+        <li><strong>Newsletter data:</strong> until you withdraw your consent or unsubscribe.</li>
+        <li><strong>Client and contract data:</strong> for the duration of the relationship and for the mandatory legal retention period.</li>
+        <li><strong>Technical logs:</strong> for a period reasonably necessary to ensure security and proper functioning of the Website.</li>
+      </ul>
+
+      <h3>5. How we share your data</h3>
+      <p>We may share personal data with:</p>
+      <ul>
+        <li>
+          <strong>Service providers / processors</strong>, such as:
+          <ul>
+            <li>Hosting and cloud providers</li>
+            <li>Email and newsletter platforms</li>
+            <li>Professional consultants (IT, legal, accounting)</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Authorities and public bodies</strong>, where required by law or in connection with legal proceedings.
+        </li>
+      </ul>
+      <p>We do not sell your personal data.</p>
+
+      <h3>6. International data transfers</h3>
+      <p>
+        Some service providers may be located outside the EU/EEA.  
+        In such cases, we ensure that appropriate safeguards are in place, such as:
+      </p>
+      <ul>
+        <li>Adequacy decisions by the European Commission, or</li>
+        <li>Standard Contractual Clauses (SCCs) approved by the European Commission.</li>
+      </ul>
+      <p>You can request more information on the safeguards in place by contacting us.</p>
+
+      <h3>7. Your rights (GDPR)</h3>
+      <p>Subject to certain conditions, you have the following rights regarding your personal data:</p>
+      <ul>
+        <li>Right of access</li>
+        <li>Right to rectification</li>
+        <li>Right to erasure</li>
+        <li>Right to restriction of processing</li>
+        <li>Right to data portability</li>
+        <li>Right to object to processing based on legitimate interests or for direct marketing</li>
+        <li>Right to withdraw consent where processing is based on consent</li>
+      </ul>
+      <p>
+        To exercise your rights, contact us at <strong>FGB@fgb-studio.com</strong>.<br>
+        You also have the right to lodge a complaint with your local supervisory authority 
+        (for example, the Italian Data Protection Authority – Garante per la Protezione dei Dati Personali).
+      </p>
+
+      <h3>8. Protection of your data</h3>
+      <p>
+        We adopt appropriate technical and organisational measures to protect personal data 
+        against unauthorised access, alteration, disclosure or destruction.  
+        However, no transmission over the Internet is completely risk-free, 
+        so we cannot guarantee absolute security.
+      </p>
+
+      <h3>9. Changes to this Privacy Policy</h3>
+      <p>
+        We may update this Privacy Policy from time to time.  
+        The updated version will be published on this page with a new “Last updated” date.  
+        We encourage you to review it periodically.
+      </p>
+    </section>                
+  </div>
+  <div id="legal-source" class="legal-source">
+    <section id="cookie-policy" class="legal-section">
+      <h2>Cookie Policy</h2>
+      <p><strong>Last updated:</strong> 01 December 2025</p>
+
+      <h3>1. What are cookies?</h3>
+      <p>
+        Cookies are small text files that websites place on your device (computer, smartphone, tablet) 
+        when you visit them. They allow the site to recognise your device and store information about 
+        your preferences or actions.
+      </p>
+      <p>
+        This Cookie Policy explains how <strong>FGB studio * Zmyrna limited</strong> uses cookies and similar 
+        technologies on <strong>www.monitoring@fgb-studio.com.com</strong> (the "Website").
+      </p>
+
+      <h3>2. Types of cookies we use</h3>
+      <p>We may use the following categories of cookies:</p>
+
+      <h4>2.1 Strictly necessary cookies</h4>
+      <ul>
+        <li>Essential for the basic functioning of the Website.</li>
+        <li>Enable navigation, access to secure areas and correct display of pages.</li>
+        <li>These cookies do not require your consent.</li>
+      </ul>
+
+      <h4>2.2 Preference / functionality cookies</h4>
+      <ul>
+        <li>Store your choices (e.g. language, region or preferences).</li>
+        <li>Provide a more personalised browsing experience.</li>
+        <li>May require your consent, depending on applicable regulations.</li>
+      </ul>
+
+      <h4>2.3 Analytics / performance cookies</h4>
+      <ul>
+        <li>Help us understand how visitors use the Website (e.g. number of visitors, most visited pages, traffic sources).</li>
+        <li>Used to improve the performance and content of the Website.</li>
+        <li>Are set only with your consent, where required by law.</li>
+      </ul>
+
+      <h4>2.4 Marketing / tracking cookies (if used)</h4>
+      <ul>
+        <li>Used to show relevant advertising on other websites or platforms, based on your browsing on our Website.</li>
+        <li>Typically set by third-party partners (e.g. advertising networks).</li>
+        <li>Used only with your explicit consent.</li>
+      </ul>
+
+      <h3>3. Third-party cookies</h3>
+      <p>
+        Some cookies are placed by third parties (for example, analytics or embedded content providers). 
+        These third parties may independently process data for their own purposes. 
+        We encourage you to review their privacy and cookie policies for more information.
+      </p>
+      <p>Examples (if used on your Website):</p>
+      <ul>
+        <li>Google Analytics – <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">https://policies.google.com/privacy</a></li>
+        <li>Other tools and platforms actually used by your website.</li>
+      </ul>
+
+      <h3>4. Cookie consent and management</h3>
+      <p>When you first visit our Website, you may see a cookie banner asking you to:</p>
+      <ul>
+        <li>Accept all cookies</li>
+        <li>Reject non-essential cookies</li>
+        <li>Customise your choices</li>
+      </ul>
+      <p>You can manage your preferences at any time by:</p>
+      <ul>
+        <li>Using the cookie settings available on the Website (if implemented)</li>
+        <li>Adjusting your browser settings to block or delete cookies</li>
+      </ul>
+      <p>
+        Please note that if you disable certain cookies (especially strictly necessary cookies), 
+        some parts of the Website may not function properly.
+      </p>
+
+      <h3>5. How to manage cookies in your browser</h3>
+      <p>
+        You can usually configure your browser to block all cookies, accept only some types or 
+        delete cookies that have already been set. The procedures vary depending on the browser 
+        (e.g. Chrome, Firefox, Safari, Edge). Please refer to your browser&apos;s help section 
+        for detailed instructions.
+      </p>
+
+      <h3>6. Retention periods</h3>
+      <p>Cookies are stored on your device for different periods of time:</p>
+      <ul>
+        <li><strong>Session cookies:</strong> deleted when you close the browser.</li>
+        <li><strong>Persistent cookies:</strong> remain for a specific period or until you delete them manually.</li>
+      </ul>
+      <p>The retention time for each cookie depends on its purpose and is determined by us or the relevant third party.</p>
+
+      <h3>7. Updates to this Cookie Policy</h3>
+      <p>
+        We may update this Cookie Policy to reflect changes in the cookies we use or in the applicable legislation.  
+        The updated version will be published on this page with a new “Last updated” date.
+      </p>
+    </section>
+  </div>
+<!-- ========== TERMS & CONDITIONS ========== -->
+  <div id="legal-source" class="legal-source">
+    <section id="termini-condizioni" class="legal-section">
+      <h2>Terms and Conditions of Use</h2>
+      <p><strong>Last updated:</strong> 01 December 2025</p>
+
+      <h3>1. Scope of these Terms</h3>
+      <p>
+        These Terms and Conditions ("Terms") govern the use of the website 
+        <strong>www.monitoring.fgb-studio.com</strong> (the "Website"), operated by 
+        <strong>FGB studio * Zmyrna limited</strong> ("we", "us", "our").
+      </p>
+      <p>
+        By accessing or using the Website, you agree to be bound by these Terms. 
+        If you do not agree with any part of these Terms, you should not use the Website.
+      </p>
+
+      <h3>2. Use of the Website</h3>
+      <p>You agree to use the Website:</p>
+      <ul>
+        <li>Only for lawful purposes</li>
+        <li>In a way that does not infringe the rights of others</li>
+        <li>Without restricting or inhibiting anyone else&apos;s use and enjoyment of the Website</li>
+        <li>Without attempting to gain unauthorised access to systems, data or services</li>
+      </ul>
+      <p>You agree not to:</p>
+      <ul>
+        <li>Upload or transmit any viruses, malware or harmful code</li>
+        <li>Use the Website to send unsolicited advertising or spam</li>
+        <li>Copy, reproduce, modify or distribute content from the Website without our prior written consent</li>
+      </ul>
+
+      <h3>3. No professional advice</h3>
+      <p>
+        The information provided on this Website is for general informational purposes only and does not 
+        constitute legal, financial, engineering, environmental or other professional advice.  
+        Before making decisions based on information from the Website, you should consult qualified professionals where appropriate.
+      </p>
+
+      <h3>4. Intellectual property</h3>
+      <p>
+        Unless otherwise indicated, all content on the Website, including text, graphics, logos, images, icons, 
+        layouts and design, is the property of <strong>FGB studio * Zmyrna limited</strong> or its licensors and 
+        is protected by intellectual property laws.
+      </p>
+      <p>You may:</p>
+      <ul>
+        <li>View the Website on your device</li>
+        <li>Print or download extracts for your personal and non-commercial use</li>
+      </ul>
+      <p>You may not:</p>
+      <ul>
+        <li>Reproduce, distribute, modify, publicly display or create derivative works from the Website content without our explicit written permission.</li>
+      </ul>
+
+      <h3>5. Third-party links</h3>
+      <p>
+        The Website may contain links to third-party websites or resources. We have no control over and are not responsible for:
+      </p>
+      <ul>
+        <li>The availability of such websites</li>
+        <li>Their content, accuracy or policies</li>
+        <li>Any damage or loss arising from your use of those websites</li>
+      </ul>
+      <p>Your use of third-party sites is at your own risk and subject to their terms and conditions.</p>
+
+      <h3>6. Disclaimer of warranties</h3>
+      <p>
+        The Website is provided on an "as is" and "as available" basis.  
+        To the fullest extent permitted by law, we do not warrant that:
+      </p>
+      <ul>
+        <li>The Website will be error-free or uninterrupted</li>
+        <li>Any defects will be corrected</li>
+        <li>The Website or the server that makes it available are free of viruses or other harmful components</li>
+        <li>The content is accurate, complete or up to date at all times</li>
+      </ul>
+
+      <h3>7. Limitation of liability</h3>
+      <p>
+        To the maximum extent permitted by applicable law, <strong>FGB studio * Zmyrna limited</strong> 
+        and its directors, employees, collaborators and partners shall not be liable for any:
+      </p>
+      <ul>
+        <li>Indirect, incidental, special or consequential damages</li>
+        <li>Loss of profits, revenue, data or goodwill</li>
+      </ul>
+      <p>
+        arising out of or in connection with your use of the Website, even if we have been advised of 
+        the possibility of such damages.
+      </p>
+      <p>
+        Nothing in these Terms excludes or limits liability where such exclusion or limitation is not allowed by law.
+      </p>
+
+      <h3>8. Indemnity</h3>
+      <p>
+        You agree to indemnify and hold harmless <strong>FGB studio * Zmyrna limited</strong> from and against any claims, 
+        liabilities, damages, losses and expenses (including reasonable legal fees) arising from:
+      </p>
+      <ul>
+        <li>Your use of the Website</li>
+        <li>Your breach of these Terms</li>
+        <li>Your violation of any law or third-party rights</li>
+      </ul>
+
+      <h3>9. Changes to the Website and to these Terms</h3>
+      <p>
+        We may modify, suspend or discontinue the Website (or any part of it) at any time without prior notice.  
+        We may also update these Terms from time to time.
+      </p>
+      <p>
+        The updated Terms will be published on this page with a new “Last updated” date.  
+        By continuing to use the Website after any changes, you accept the updated Terms.
+      </p>
+
+      <h3>10. Governing law and jurisdiction</h3>
+      <p>
+        These Terms are governed by and construed in accordance with the laws of <strong>UK</strong>, 
+        without regard to conflict of law principles.
+      </p>
+      <p>
+        Any dispute arising out of or in connection with these Terms or the use of the Website shall be subject to 
+        the exclusive jurisdiction of the courts of <strong>London, UK</strong>, without prejudice to mandatory 
+        consumer protection rules where applicable.
+      </p>
+
+      <h3>11. Contact</h3>
+      <p>
+        For any questions about these Terms, you can contact us at:<br>
+        <strong>Email:</strong> FGB@fgb-studio.com<br>
+        <strong>Address:</strong> The Shrubberies - George Lane - London E18 1BG – UK
+      </p>
+    </section>
+  </div>
+  <!-- MODALE LEGALE -->
+  <div class="legal-modal" id="legal-modal">
+    <div class="legal-modal__overlay" data-legal-close></div>
+
+    <div class="legal-modal__dialog">
+      <button type="button" class="legal-modal__close" data-legal-close>&times;</button>
+      <h2 class="legal-modal__title" id="legal-modal-title"></h2>
+      <div class="legal-modal__content" id="legal-modal-content"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const modal = document.getElementById('legal-modal');
+      const modalTitle = document.getElementById('legal-modal-title');
+      const modalContent = document.getElementById('legal-modal-content');
+
+      // Mappa: tipo -> id sezione nascosta
+      const LEGAL_MAP = {
+        privacy: {
+          title: 'Informativa Privacy',
+          sectionId: 'privacy-policy'
+        },
+        cookie: {
+          title: 'Cookie Policy',
+          sectionId: 'cookie-policy'
+        },
+        terms: {
+          title: 'Termini e condizioni d’uso',
+          sectionId: 'termini-condizioni'
+        }
+      };
+
+      // Apre la modale con il contenuto giusto
+      function openLegalModal(type) {
+        const conf = LEGAL_MAP[type];
+        if (!conf) return;
+
+        const hiddenSection = document.getElementById(conf.sectionId);
+        if (!hiddenSection) return;
+
+        modalTitle.textContent = conf.title;
+        modalContent.innerHTML = hiddenSection.innerHTML;
+        modal.classList.add('is-visible');
+        document.body.style.overflow = 'hidden'; // blocca scroll sotto
+      }
+
+      // Chiude la modale
+      function closeLegalModal() {
+        modal.classList.remove('is-visible');
+        document.body.style.overflow = '';
+      }
+
+      // Click sui link nel footer
+      document.querySelectorAll('[data-legal]').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const type = this.dataset.legal;
+          openLegalModal(type);
+        });
+      });
+
+      // Click su overlay o bottone X
+      modal.querySelectorAll('[data-legal-close]').forEach(el => {
+        el.addEventListener('click', closeLegalModal);
+      });
+
+      // ESC per chiudere
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('is-visible')) {
+          closeLegalModal();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
