@@ -1165,20 +1165,29 @@
     text-decoration: underline;
   }
 
+  /* ===== CONTACT PANEL FOOTER – LOGO CENTRATO ===== */
   .contact-panel__footer {
     margin-top: 2.2rem;
-    padding-top: 1.4rem;
+    padding: 1.4rem 0 0;
     border-top: 1px solid rgba(255, 255, 255, 0.18);
     display: flex;
     align-items: center;
+    justify-content: center;      /* centra orizzontalmente */
   }
-
+  
   .contact-panel__footer img {
-    width: 260px;
-    height: auto;           /* regola qui la dimensione del logo */
-    opacity: 0.9;
     display: block;
-    margin-left: 160px;
+    width: min(260px, 70%);       /* ben visibile ma responsive */
+    height: auto;
+    opacity: 0.95;
+    margin: 0;                    /* niente spinta a destra */
+  }
+  
+  /* opzionale: su schermi piccoli un filo più piccolo */
+  @media (max-width: 480px) {
+    .contact-panel__footer img {
+      width: min(220px, 70%);
+    }
   }
 
   /* Bottone elenco sedi: stesso stile degli altri link del pannello */
@@ -3664,4 +3673,5 @@ Track the progress of your projects all the way to completion and customise your
 
 </body>
 </html>
+
 
