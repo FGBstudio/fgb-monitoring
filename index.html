@@ -295,6 +295,81 @@
         transform: translateY(0);
       }
     }
+    /* === HEADER MOBILE: niente barra bianca all'inizio, logo che entra in header allo scroll === */
+    @media (max-width: 768px) {
+
+      /* niente scroll orizzontale di sicurezza */
+      html,
+      body {
+        overflow-x: hidden;
+      }
+
+      /* stato iniziale: header “trasparente” sopra al video, come desktop */
+      .site-header {
+        padding: 0.8rem 1.2rem;
+        background: transparent;
+        box-shadow: none;
+        mix-blend-mode: difference;
+        color: #fff;
+      }
+
+      /* su mobile disattiviamo l’effetto hover che ti sbianca la barra */
+      .site-header:hover {
+        background: transparent;
+        box-shadow: none;
+        mix-blend-mode: difference;
+      }
+
+      /* stato compatto: barra bianca fissa con logo verde dentro, quando scolli */
+      .site-header--compact,
+      .site-header--compact:hover {
+        background: rgba(255, 255, 255, 0.98);
+        color: #111;
+        mix-blend-mode: normal;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .header-left,
+      .header-right {
+        gap: 0.6rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+      }
+
+      /* quando entra nella barra: logo più piccolo e dentro l’header */
+      .site-header--compact .header-logo {
+        top: 0.6rem;
+      }
+
+      .site-header--compact .header-logo img {
+        height: 32px;
+      }
+
+      /* IMPORTANTISSIMO: niente spazio bianco sopra il video */
+      .hero-section {
+        margin-top: 0;
+      }
+      .hero-content {
+        padding: 0 1.5rem 5rem;
+      }
+
+      .hero-eyebrow {
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        margin-bottom: 0.4rem;
+      }
+
+      .hero-title {
+        font-size: 1.4rem;      /* molto più piccola */
+        letter-spacing: 0.16em;
+        line-height: 1.3;
+      }
+
+      /* abbassiamo un po' il logo grande nel video, così non invade tutto */
+      .header-logo {
+        top: 7rem;
+      }
+    }
 
     /* ================= SEZIONE SETTORI CHE SERVIAMO ================= */
     .sectors-section {
@@ -804,40 +879,82 @@
   /* --- RESPONSIVE FOOTER --- */
   @media (max-width: 900px) {
     .site-footer {
+      width: 100%;
+      margin: 0;
       padding: 32px 20px 24px;
+      overflow-x: hidden;
     }
 
+    .footer-inner {
+      max-width: 100%;
+    }
+
+    /* TOP: newsletter sopra, nav sotto in colonna */
     .footer-top {
-      gap: 40px;
-      padding: 32px 0 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 32px;
+      padding: 28px 0 24px;
     }
 
+    /* newsletter full width */
+    .footer-newsletter {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+
+    /* colonne NAV tutte in verticale una dopo l’altra */
     .footer-nav-columns {
-      flex-wrap: wrap;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
     }
 
     .footer-nav-col {
-      flex: 1 1 45%;
-      margin-bottom: 16px;
+      flex: 0 0 auto;
+      width: 100%;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    .footer-bottom {
+      align-items: flex-start;
+      gap: 8px;
+      padding-top: 16px;
+    }
+
+    /* logo in fondo che scala e resta dentro */
+    .footer-bottom-logo img {
+      max-width: 100%;
+      height: auto;
     }
   }
 
   @media (max-width: 600px) {
+    .site-footer {
+      padding: 28px 16px 20px;
+    }
+
     .footer-top {
-      flex-direction: column;
+      gap: 24px;
     }
 
-    .footer-nav-columns {
+    /* input newsletter + bottone vanno a capo, niente overflow */
+    .footer-input-wrap {
       flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
     }
 
-    .footer-nav-col {
-      min-width: 0;
+    .footer-newsletter__submit {
+      font-size: 11px;
     }
 
     .footer-social {
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
       font-size: 0;
     }
 
@@ -853,10 +970,24 @@
       display: block;
     }
 
+    /* riga città che va a capo e non crea slide orizzontale */
+    .footer-cta-link {
+      white-space: normal;
+      display: block;
+      line-height: 1.4;
+    }
+
     .footer-bottom {
       align-items: flex-start;
     }
+
+    .footer-bottom-logo {
+      text-align: left;
+      margin-top: 10px;
+    }
   }
+
+
 
   /* ========== CONTACT SIDE PANEL ========== */
 
@@ -1825,6 +1956,86 @@
     padding: 0;
     background-color: #ffffff !important;
   }
+  @media (max-width: 768px) {
+    /* Titolo hero molto più piccolo su mobile */
+    .hero-title {
+      font-size: 1.1rem !important;
+      letter-spacing: 0.16em !important;
+      line-height: 1.3 !important;
+    }
+
+    /* Header trasparente all'inizio, sopra al video */
+    .site-header {
+      padding: 0.8rem 1.2rem !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      mix-blend-mode: difference !important;
+      color: #fff !important;
+    }
+
+    /* niente “hover bianco” su mobile */
+    .site-header:hover {
+      background: transparent !important;
+      box-shadow: none !important;
+      mix-blend-mode: difference !important;
+    }
+
+    /* Stato compatto: barra bianca con logo dentro */
+    .site-header--compact,
+    .site-header--compact:hover {
+      background: rgba(255, 255, 255, 0.98) !important;
+      color: #111 !important;
+      mix-blend-mode: normal !important;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Logo grande in hero */
+    .header-logo {
+      top: 7rem !important;
+    }
+
+    /* Logo rientra nella barra quando compatto */
+    .site-header--compact .header-logo {
+      top: 0.6rem !important;
+    }
+
+    .site-header--compact .header-logo img {
+      height: 32px !important;
+    }
+    /* FIX: su mobile header sempre compatto, logo già dentro la barra */
+    @media (max-width: 768px) {
+      .site-header {
+        padding: 0.8rem 1.2rem !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        color: #111 !important;
+        mix-blend-mode: normal !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+      }
+
+      /* niente effetto hover “barra che cambia” su mobile */
+      .site-header:hover {
+        background: rgba(255, 255, 255, 0.98) !important;
+        color: #111 !important;
+        mix-blend-mode: normal !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+      }
+
+      /* logo sempre nella barra, non più a 7rem nel mezzo della hero */
+      .header-logo {
+        top: 0.5rem !important;
+        margin-top: 0px;
+        transform: translateX(-50%) !important;
+      }
+
+      .header-logo img {
+        height: 32px !important;
+      }
+      .header-link {
+        font-size: 0.5rem !important;
+      }
+
+  }
+
   </style>
 </head>
 <body>
@@ -2437,46 +2648,47 @@ Track the progress of your projects all the way to completion and customise your
   </script>
   <script>
     (function () {
-      const header = document.querySelector(".site-header");
-      const hero   = document.querySelector(".hero-section");
+      const header  = document.querySelector(".site-header");
       const logoImg = document.querySelector(".header-logo img");
 
-      if (!header || !hero || !logoImg) return;
+      if (!header || !logoImg) return;
 
-      const defaultSrc = logoImg.getAttribute("data-src-default")  || logoImg.src;
+      const defaultSrc = logoImg.getAttribute("data-src-default") || logoImg.src;
       const compactSrc = logoImg.getAttribute("data-src-compact") || defaultSrc;
 
-      function getThreshold() {
-        // punto in cui il logo entra nella barra
-        return hero.offsetHeight * 0.35;
-      }
+      function applyDesktopState() {
+        const y = window.scrollY || window.pageYOffset || 0;
 
-      let threshold = 0;
-
-      function updateThreshold() {
-        threshold = getThreshold();
-        onScroll(); // riallinea stato all'avvio/resize
-      }
-
-      function onScroll() {
-        const scrollY = window.scrollY || window.pageYOffset;
-
-        if (scrollY > threshold) {
-          // stato compatto
+        if (y > 10) {
           header.classList.add("site-header--compact");
           logoImg.src = compactSrc;
         } else {
-          // stato “hero” grande
           header.classList.remove("site-header--compact");
           logoImg.src = defaultSrc;
         }
       }
 
-      window.addEventListener("load", updateThreshold);
-      window.addEventListener("resize", updateThreshold);
-      window.addEventListener("scroll", onScroll);
+      function updateHeader() {
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          // MOBILE: header sempre compatto, niente animazione “logo che scende”
+          header.classList.add("site-header--compact");
+          logoImg.src = compactSrc;
+        } else {
+          // DESKTOP: mantieni l’effetto originale
+          applyDesktopState();
+        }
+      }
+
+      window.addEventListener("load", updateHeader);
+      window.addEventListener("scroll", updateHeader);
+      window.addEventListener("resize", updateHeader);
     })();
   </script>
+
+
+
   <div
     class="contact-panel"
     id="contactPanel"
@@ -2490,7 +2702,7 @@ Track the progress of your projects all the way to completion and customise your
     <div class="contact-panel__container">
       <header class="contact-panel__header">
         <h2 class="contact-panel__title" id="contactPanelTitle">
-          Contact us
+          Contattaci
         </h2>
         <button
           type="button"
@@ -3452,4 +3664,3 @@ Track the progress of your projects all the way to completion and customise your
 
 </body>
 </html>
-
