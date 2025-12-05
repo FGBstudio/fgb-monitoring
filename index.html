@@ -110,7 +110,7 @@
     }
 
     .header-logo img {
-      height: 150px; /* logo grande in apertura */
+      height: 250px; /* logo grande in apertura */
       display: block;
       transition:
         height 0.45s ease,
@@ -295,390 +295,105 @@
         transform: translateY(0);
       }
     }
-    /* === HEADER MOBILE: niente barra bianca all'inizio, logo che entra in header allo scroll === */
-    @media (max-width: 768px) {
 
-      /* niente scroll orizzontale di sicurezza */
-      html,
-      body {
-        overflow-x: hidden;
-      }
-
-      /* stato iniziale: header “trasparente” sopra al video, come desktop */
-      .site-header {
-        padding: 0.8rem 1.2rem;
-        background: transparent;
-        box-shadow: none;
-        mix-blend-mode: difference;
-        color: #fff;
-      }
-
-      /* su mobile disattiviamo l’effetto hover che ti sbianca la barra */
-      .site-header:hover {
-        background: transparent;
-        box-shadow: none;
-        mix-blend-mode: difference;
-      }
-
-      /* stato compatto: barra bianca fissa con logo verde dentro, quando scolli */
-      .site-header--compact,
-      .site-header--compact:hover {
-        background: rgba(255, 255, 255, 0.98);
-        color: #111;
-        mix-blend-mode: normal;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      .header-left,
-      .header-right {
-        gap: 0.6rem;
-        font-size: 0.7rem;
-        letter-spacing: 0.12em;
-      }
-
-      /* quando entra nella barra: logo più piccolo e dentro l’header */
-      .site-header--compact .header-logo {
-        top: 0.6rem;
-      }
-
-      .site-header--compact .header-logo img {
-        height: 32px;
-      }
-
-      /* IMPORTANTISSIMO: niente spazio bianco sopra il video */
-      .hero-section {
-        margin-top: 0;
-      }
-      .hero-content {
-        padding: 0 1.5rem 5rem;
-      }
-
-      .hero-eyebrow {
-        font-size: 0.65rem;
-        letter-spacing: 0.14em;
-        margin-bottom: 0.4rem;
-      }
-
-      .hero-title {
-        font-size: 1.4rem;      /* molto più piccola */
-        letter-spacing: 0.16em;
-        line-height: 1.3;
-      }
-
-      /* abbassiamo un po' il logo grande nel video, così non invade tutto */
-      .header-logo {
-        top: 7rem;
-      }
+/* ========== NEWS ========== */
+  * {
+      box-sizing: border-box;
     }
 
-    /* ================= SEZIONE SETTORI CHE SERVIAMO ================= */
-    .sectors-section {
-      padding: 60px 0 80px;
-      background-color: #ffffff;
-      color: #111111;
-      text-align: center;
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Futura", sans-serif;
     }
 
-    .sectors-section__title {
-      font-size: clamp(26px, 3vw, 34px);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 36px;
-      color: #111111;
+    .slider-grid-wrapper {
+      width: 100%;
     }
 
-    .sectors-section__subtitle {
-      font-size: 20px;
-      color: #555555;
-      margin-bottom: 24px;
+    /* DESKTOP: 4 COLONNE FULL WIDTH */
+    .slider-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid #e5e5e5;   /* solo linea superiore */
     }
 
-    .sectors-carousel {
-      position: relative;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-
-    .sectors-carousel__track {
+    .slider-card {
       display: flex;
-      gap: 40px;
-      overflow: hidden;
-      scroll-behavior: smooth;
-      padding: 20px 0 10px;
+      flex-direction: column;
+      background: #ffffff;
+      overflow: hidden; /* niente sbordature */
     }
 
-    .sector-slide {
+    .slider-card__image-wrapper {
       position: relative;
-      flex: 0 0 70vw;
-      max-width: 960px;
-      height: min(60vh, 550px);
-      border-radius: 28px;
+      border-right: 1px solid #e5e5e5;
       overflow: hidden;
-      cursor: pointer;
-      transform: scale(0.85);
-      opacity: 0.45;
-      transition:
-        transform 0.6s ease,
-        opacity 0.6s ease,
-        box-shadow 0.6s ease;
-      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      aspect-ratio: 4 / 5;
     }
 
-    .sector-slide.is-active {
-      transform: scale(1);
-      opacity: 1;
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25);
-      z-index: 2;
+    .slider-card:first-child .slider-card__image-wrapper {
+      border-left: 1px solid #e5e5e5;
     }
 
-    .sector-slide__image {
+    /* IMMAGINI SOVRAPPOSTE */
+    .slider-card__image {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      transform: scale(1.05);
-      transition: filter 0.6s ease, transform 0.6s ease;
-    }
-
-    .sector-slide:not(.is-active) .sector-slide__image {
-      filter: blur(2px) brightness(0.6);
-      transform: scale(1.03);
-    }
-
-    .sector-slide::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.55) 0%,
-        rgba(0, 0, 0, 0.35) 35%,
-        rgba(0, 0, 0, 0.6) 100%
-      );
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-      opacity: 0.9;
-      z-index: 1;
-    }
-
-    .sector-slide.is-active::before {
-      opacity: 0.7;
-    }
-
-    .sector-slide__title,
-    .sector-slide__cta,
-    .sector-slide__description {
-      color: #ffffff;
-    }
-
-    .sector-slide__title {
-      position: absolute;
-      top: 22px;
-      left: 26px;
-      right: 26px;
-      z-index: 2;
-      text-align: left;
-      font-size: clamp(18px, 2.1vw, 22px);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .sector-slide__cta {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      font-size: 13px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .sector-slide__description {
-      position: absolute;
-      left: 26px;
-      right: 26px;
-      bottom: 24px;
-      font-size: 17px;
-      line-height: 1.5;
-      text-align: left;
-      opacity: 0;
-      transform: translateY(12px);
-      transition:
-        opacity 0.5s ease,
-        transform 0.5s ease;
-      z-index: 2;
-    }
-
-    .sector-slide.is-active .sector-slide__description {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .sectors-carousel__arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 0, 0, 0.3);
-      background: rgba(255, 255, 255, 0.94);
-      color: #111111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition:
-        background 0.3s ease,
-        transform 0.3s ease,
-        border-color 0.3s ease,
-        box-shadow 0.3s ease;
-      z-index: 5;
-    }
-    .sector-slide__title {
-      position: absolute;
-      top: 22px;
-      left: 26px;
-      right: 26px;
-      z-index: 2;
-      text-align: left;
-      font-size: clamp(18px, 2.1vw, 22px);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-
-      /* se usi il logo immagine, questi per il testo non danno fastidio */
-    }
-
-    /* logo dentro al titolo */
-    .sector-slide__title-image {
       display: block;
-      max-height: 80px;   /* regola l’altezza del logo */
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.541)); /* leggero glow come il testo */
+      object-fit: cover;
+      transition: opacity 0.35s ease;
     }
 
-    .sectors-carousel__arrow--prev {
-      left: 18px;
+    .slider-card__image--hover {
+      opacity: 0;
     }
 
-    .sectors-carousel__arrow--next {
-      right: 18px;
+    .slider-card__image-wrapper:hover .slider-card__image--hover {
+      opacity: 1;
     }
 
-    .sectors-carousel__arrow:hover {
-      background: rgba(0, 0, 0, 0.04);
-      border-color: #111111;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      transform: translateY(-50%) scale(1.05);
+    .slider-card__image-wrapper:hover .slider-card__image--primary {
+      opacity: 0;
     }
 
-    .sectors-carousel__arrow span {
-      font-size: 20px;
-      line-height: 1;
+    .slider-card__title {
+      margin: 18px 0 26px;
+      font-size: 15px;
+      line-height: 1.3;
+      text-align: center;
+      letter-spacing: 0.03em;
+      color: #000;
     }
 
-    #monitoring-section {
-      position: relative;
-      overflow: hidden;  /* evita che il pattern esca fuori */
-      background-color: #ffffff;
-    }
-
-    #monitoring-section::before {
-      content: "";
-      margin-top: 00px;
-      position: absolute;
-      inset: 0;
-      background-image: url("assets/img/pattern-grigio.png"); /* tuo file */
-      background-repeat: repeat;
-      background-size: 900px auto;  /* aumenta/diminuisci per cambiare la scala */
-      opacity: 0.32;                /* intensità del pattern */
-      pointer-events: none;
-      z-index: 0;         /* non blocca click su slider */
-    }
-    .sectors-section__title,
-    .sectors-section__subtitle,
-    .sectors-carousel {
-      position: relative;
-      z-index: 1;   /* sopra al ::before */
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .sectors-carousel {
-        padding: 0 20px;
-      }
-
-      .sector-slide {
-        flex: 0 0 86vw;
-        height: min(55vh, 440px);
-      }
-
-      .sectors-carousel__arrow {
-        width: 38px;
-        height: 38px;
+    /* TABLET / MEZZA FINESTRA: 2 COLONNE */
+    @media (max-width: 1024px) {
+      .slider-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
+    /* SMARTPHONE: 1 COLONNA */
     @media (max-width: 600px) {
-      .sectors-section {
-        padding: 40px 0 60px;
-      }
-
-      .sectors-carousel {
-        padding: 0 12px;
-      }
-
-      .sector-slide {
-        flex: 0 0 88vw;
-        height: min(50vh, 380px);
-        border-radius: 22px;
-      }
-
-      .sector-slide__title {
-        top: 18px;
-        left: 20px;
-        right: 20px;
-        font-size: 16px;
-      }
-
-      .sector-slide__description {
-        font-size: 14px;
-        left: 20px;
-        right: 20px;
-      }
-
-      .sectors-carousel__arrow--prev {
-        left: 6px;
-      }
-
-      .sectors-carousel__arrow--next {
-        right: 6px;
+      .slider-grid {
+        grid-template-columns: 1fr;
       }
     }
-
-  /* ========== FOOTER ========== */
 
 /* ========== FOOTER ========== */
 
   .site-footer {
-    /* full width, esce dal container centrale */
-    width: 100vw;
-    margin-left: -34px;
-    margin-right: calc(50% - 50vw);
+    width: 100%;          /* basta e avanza */
+    margin: 0;            /* niente margini strani */
 
-    background: #ffffff;
-    color: #00000083;
+    background: #006367;
+    color: #ffffff;
     padding: 48px 10px 32px;
     font-size: 14px;
 
-    /* le righe ora sono qui, quindi a tutta pagina */
-    border-top: 1px solid #dddddd96;
+    border-top: 1px solid #ffffff;
     border-bottom: 1px solid #e2e2e2;
   }
 
@@ -727,7 +442,7 @@
   .footer-input {
     flex: 1;
     border: none;
-    border-bottom: 1px solid #111111;
+    border-bottom: 1px solid #ffffff;
     padding: 8px 0;
     font: inherit;
     background: transparent;
@@ -761,7 +476,7 @@
     gap: 8px;
     font-size: 12px;
     line-height: 1.5;
-    color: #333333;
+    color: #777777;
   }
 
   .footer-consent input {
@@ -808,7 +523,7 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     margin-bottom: 16px;
-    color: #006367
+    color: #ffffffb4
   }
 
   .footer-nav-list {
@@ -829,14 +544,14 @@
   .footer-bottom {
     display: flex;
     flex-direction: column;   /* © e città uno sotto l’altra */
-    align-items: flex-start;
+    align-items: center;
     gap: 6px;
     padding-top: 20px;
   }
 
   .footer-copy {
     font-size: 12px;
-    color: #555555;
+    color: #ffffffa6;
   }
 
   .footer-bottom-cta {
@@ -844,19 +559,22 @@
   }
 
   .footer-cta-link {
-    font-size: 11px;
+    font-size: 15px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     text-decoration: none;
     border-bottom: 1px solid transparent;
     padding-bottom: 2px;
     cursor: pointer;
-    color: #006367;
-    white-space: nowrap;       /* se vuoi evitare l’andare a capo */
+    color: #ffffff;
+    white-space: nowrap;
+    display: block;      /* diventa a tutta riga */
+    margin: 0 auto;      /* centra orizzontalmente */
+    text-align: center;  /* centra il testo dentro */     
   }
 
   .footer-cta-link:hover {
-    border-bottom-color: #006367;
+    border-bottom-color: #ffffff;
   }
 
   .footer-cta-link--muted {
@@ -871,7 +589,7 @@
 
   .footer-bottom-logo img {
     display: inline-block;
-    width: 1200px;
+    width: 900px;
     height: auto;
   }
 
@@ -879,82 +597,40 @@
   /* --- RESPONSIVE FOOTER --- */
   @media (max-width: 900px) {
     .site-footer {
-      width: 100%;
-      margin: 0;
       padding: 32px 20px 24px;
-      overflow-x: hidden;
     }
 
-    .footer-inner {
-      max-width: 100%;
-    }
-
-    /* TOP: newsletter sopra, nav sotto in colonna */
     .footer-top {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 32px;
-      padding: 28px 0 24px;
+      gap: 40px;
+      padding: 32px 0 28px;
     }
 
-    /* newsletter full width */
-    .footer-newsletter {
-      flex: 0 0 auto;
-      width: 100%;
-    }
-
-    /* colonne NAV tutte in verticale una dopo l’altra */
     .footer-nav-columns {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 100%;
+      flex-wrap: wrap;
     }
 
     .footer-nav-col {
-      flex: 0 0 auto;
-      width: 100%;
-      min-width: 0;
-      margin-bottom: 0;
-    }
-
-    .footer-bottom {
-      align-items: flex-start;
-      gap: 8px;
-      padding-top: 16px;
-    }
-
-    /* logo in fondo che scala e resta dentro */
-    .footer-bottom-logo img {
-      max-width: 100%;
-      height: auto;
+      flex: 1 1 45%;
+      margin-bottom: 16px;
     }
   }
 
   @media (max-width: 600px) {
-    .site-footer {
-      padding: 28px 16px 20px;
-    }
-
     .footer-top {
-      gap: 24px;
-    }
-
-    /* input newsletter + bottone vanno a capo, niente overflow */
-    .footer-input-wrap {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
     }
 
-    .footer-newsletter__submit {
-      font-size: 11px;
+    .footer-nav-columns {
+      flex-direction: column;
+    }
+
+    .footer-nav-col {
+      min-width: 0;
     }
 
     .footer-social {
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 24px;
       font-size: 0;
     }
 
@@ -970,24 +646,10 @@
       display: block;
     }
 
-    /* riga città che va a capo e non crea slide orizzontale */
-    .footer-cta-link {
-      white-space: normal;
-      display: block;
-      line-height: 1.4;
-    }
-
     .footer-bottom {
       align-items: flex-start;
     }
-
-    .footer-bottom-logo {
-      text-align: left;
-      margin-top: 10px;
-    }
   }
-
-
 
   /* ========== CONTACT SIDE PANEL ========== */
 
@@ -1018,12 +680,7 @@
     width: 60vw;
     max-width: 720px;
     min-width: 480px;
-
-    /* pannello “pieno schermo” ma scrollabile */
     height: 100vh;
-    max-height: 100vh;
-    overflow-y: auto;
-
     background: #006367;
     color: #ffffff;
     display: flex;
@@ -1170,29 +827,20 @@
     text-decoration: underline;
   }
 
-  /* ===== CONTACT PANEL FOOTER – LOGO CENTRATO ===== */
   .contact-panel__footer {
     margin-top: 2.2rem;
-    padding: 1.4rem 0 0;
+    padding-top: 1.4rem;
     border-top: 1px solid rgba(255, 255, 255, 0.18);
     display: flex;
     align-items: center;
-    justify-content: center;      /* centra orizzontalmente */
   }
-  
+
   .contact-panel__footer img {
+    width: 260px;
+    height: auto;           /* regola qui la dimensione del logo */
+    opacity: 0.9;
     display: block;
-    width: min(260px, 70%);       /* ben visibile ma responsive */
-    height: auto;
-    opacity: 0.95;
-    margin: 0;                    /* niente spinta a destra */
-  }
-  
-  /* opzionale: su schermi piccoli un filo più piccolo */
-  @media (max-width: 480px) {
-    .contact-panel__footer img {
-      width: min(220px, 70%);
-    }
+    margin-left: 160px;
   }
 
   /* Bottone elenco sedi: stesso stile degli altri link del pannello */
@@ -1404,12 +1052,19 @@
   }
 
   /* Background per ogni slot (cambiali coi tuoi) */
-  .service-1 { background-image: url("assets/img/services/Alexander_McQueen.jpg"); }
-  .service-2 { background-image: url("assets/img/services/Fendi.webp"); }
+  .service-1 { background-image: url("assets/img/services/Kering.jpg"); }
+  .service-2 { background-image: url("assets/img/services/louis-vuitton.webp"); }
   .service-3 { background-image: url("assets/img/services/Prada.avif"); }
   .service-4 { background-image: url("assets/img/services/ferragamo.jpg"); }
-  .service-5 { background-image: url("assets/img/services/Jmmy-Choo.jpg"); }
+  .service-5 { background-image: url("assets/img/services/Jimmy-Choo-scaled.jpg"); }
   .service-6 { background-image: url("assets/img/services/Richmont.jpg"); }
+  .service-7 { background-image: url("assets/img/services/Audemars.jpg"); }
+  .service-8 { background-image: url("assets/img/services/Versace.webp"); }
+  .service-9 { background-image: url("assets/img/services/Zegna.avif"); }
+  .service-10 { background-image: url("assets/img/services/Saint_Laurent.avif"); }
+  .service-11 { background-image: url("assets/img/services/Fendi.avif"); }
+  .service-12 { background-image: url("assets/img/services/balenciaga.jpg"); }
+  .service-13 { background-image: url("assets/img/services/Diesel.png"); }
 
   /* Titolo sopra all’immagine */
   /* Contenitore del logo brand in alto a sinistra */
@@ -1428,9 +1083,12 @@
       transform 0.6s ease;
   }
   .service-item:hover .section-title {
-    top: 18px;       /* posizione finale in alto */
-    left: 24px;
-    transform: translate(0, 0);
+    top: 50%;       
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .service-item:hover .section-title img {
+    transform: scale(1.3);
   }
   /* Logo brand-partner */
   .section-title img {
@@ -1691,36 +1349,6 @@
     visibility: visible;
   }
 
-  /* Griglia loghi partner (fino a 4) */
-  .partners-logos {
-    position: absolute;
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    align-items: center;
-  }
-  .partners-logos img {
-    max-width: 100%;
-    max-height: 48px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
-  }
-
-  /* Loghi partner: nascosti di default (desktop) */
-  .partners-logos {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(6px);
-    transition:
-      opacity 0.4s ease,
-      visibility 0.4s ease,
-      transform 0.4s ease;
-  }
-
   /* Mostra i loghi quando la card è in hover */
   .service-item:hover .partners-logos {
     opacity: 1;
@@ -1754,12 +1382,6 @@
       visibility: visible;
       transform: none;
       inset: 80px 24px 120px 24px;
-    }
-    .partners-logos {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      opacity: 1;
-      visibility: visible;
-      transform: none;   /* niente animazione su mobile */
     }
   }
   /* ===== MODALE NEWSLETTER ===== */
@@ -1970,84 +1592,30 @@
     padding: 0;
     background-color: #ffffff !important;
   }
+  /* === HEADER: ADATTAMENTO MOBILE (mantiene l'animazione del logo) === */
   @media (max-width: 768px) {
-    /* Titolo hero molto più piccolo su mobile */
-    .hero-title {
-      font-size: 1.1rem !important;
-      letter-spacing: 0.16em !important;
-      line-height: 1.3 !important;
-    }
 
-    /* Header trasparente all'inizio, sopra al video */
+    /* la barra bianca compatta non occupa visivamente troppo spazio */
     .site-header {
-      padding: 0.8rem 1.2rem !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      mix-blend-mode: difference !important;
-      color: #fff !important;
+      padding: 0.6rem 1rem;
     }
 
-    /* niente “hover bianco” su mobile */
-    .site-header:hover {
-      background: transparent !important;
-      box-shadow: none !important;
-      mix-blend-mode: difference !important;
+    .header-left,
+    .header-right {
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
     }
 
-    /* Stato compatto: barra bianca con logo dentro */
-    .site-header--compact,
-    .site-header--compact:hover {
-      background: rgba(255, 255, 255, 0.98) !important;
-      color: #111 !important;
-      mix-blend-mode: normal !important;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    /* Logo grande in hero */
-    .header-logo {
-      top: 7rem !important;
-    }
-
-    /* Logo rientra nella barra quando compatto */
-    .site-header--compact .header-logo {
-      top: 0.6rem !important;
-    }
-
+    /* quando è in stato compatto il logo si riduce un po' di più su schermi piccoli */
     .site-header--compact .header-logo img {
-      height: 32px !important;
+      height: 32px;    /* invece dei 40px standard */
     }
-    /* FIX: su mobile header sempre compatto, logo già dentro la barra */
-    @media (max-width: 768px) {
-      .site-header {
-        padding: 0.8rem 1.2rem !important;
-        background: rgba(255, 255, 255, 0.98) !important;
-        color: #111 !important;
-        mix-blend-mode: normal !important;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
-      }
 
-      /* niente effetto hover “barra che cambia” su mobile */
-      .site-header:hover {
-        background: rgba(255, 255, 255, 0.98) !important;
-        color: #111 !important;
-        mix-blend-mode: normal !important;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
-      }
-
-      /* logo sempre nella barra, non più a 7rem nel mezzo della hero */
-      .header-logo {
-        top: 0.5rem !important;
-        margin-top: 0px;
-        transform: translateX(-50%) !important;
-      }
-
-      .header-logo img {
-        height: 32px !important;
-      }
-      .header-link {
-        font-size: 0.5rem !important;
-      }
-
+    /* un filo di spazio per non far “schiacciare” l’hero sotto l’header fisso */
+    .hero-section {
+      margin-top: 60px;
+    }
   }
 
   </style>
@@ -2067,7 +1635,7 @@
         src="assets/img/logo-tuo-brand-white.png"
         alt="Nome del tuo brand"
         data-src-default="assets/img/logo-tuo-brand-white.png"
-        data-src-compact="assets/img/logo-tuo-brand-green.png"
+        data-src-compact="assets/img/green.png"
       />
     </div>
 
@@ -2150,252 +1718,80 @@
     </div>
   </section>
 
-  <!-- ========== SEZIONE SETTORI CHE SERVIAMO ========== -->
-  <section id="monitoring-section" class="sectors-section">
-    <h2 class="sectors-section__title">WHAT'S NEW FOR 2026</h2>
-    <p class="sectors-section__subtitle">
-      Discover our selection of new solutions tailored to you and to the future of sustainable real estate.
-    </p>
-
-    <div class="sectors-carousel">
-      <button
-        class="sectors-carousel__arrow sectors-carousel__arrow--prev"
-        aria-label="Indietro"
-        type="button"
-      >
-        <span>&lsaquo;</span>
-      </button>
-      <button
-        class="sectors-carousel__arrow sectors-carousel__arrow--next"
-        aria-label="Avanti"
-        type="button"
-      >
-        <span>&rsaquo;</span>
-      </button>
-
-      <div class="sectors-carousel__track" id="sectorsTrack">
-        <!-- Slide 1 -->
-        <article class="sector-slide is-active">
+  <!-- ========== SEZIONE NEWS ========== -->
+  <div class="slider-grid-wrapper">
+    <div class="slider-grid">
+      <!-- CARD 1 -->
+      <article class="slider-card">
+        <div class="slider-card__image-wrapper">
+          <!-- immagine principale -->
           <img
-            class="sector-slide__image"
+            class="slider-card__image slider-card__image--primary"
             src="assets/img/sectors/Energy.jpg"
-            alt="Energy Monitoring"
+            alt="Placeholder image 1"
           />
-          <h3 class="sector-slide__title">
-            <img
-              src="assets/img/sectors/welcome-greeny.png"
-              alt="Welcome Greeny"
-              class="sector-slide__title-image"
-            />
-          </h3>
-          <!--<div class="sector-slide__cta">Scopri</div>-->
-          <p class="sector-slide__description">
-            Choose Greney, Manage your Energy.
-            Control your portfolio energy consumption, get an added value, Improve operations, Find inefficiency, Reach Awards.
-          </p>
-        </article>
-
-        <!-- Slide 2 -->
-        <article class="sector-slide">
+          <!-- immagine on hover -->
           <img
-            class="sector-slide__image"
+            class="slider-card__image slider-card__image--hover"
+            src="assets/img/sectors/Energy2.png"
+            alt="Placeholder image 1 hover"
+          />
+        </div>
+        <h2 class="slider-card__title">Welcome Greeny</h2>
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="slider-card">
+        <div class="slider-card__image-wrapper">
+          <img
+            class="slider-card__image slider-card__image--primary"
             src="assets/img/sectors/Air.jpg"
-            alt="Air Monitoring"
+            alt="Placeholder image 2"
           />
-          <h3 class="sector-slide__title">
-            <img
-              src="assets/img/sectors/welcome-clair.png"
-              alt="Welcome Greeny"
-              class="sector-slide__title-image"
-            />
-          </h3>
-          <!--<div class="sector-slide__cta">Scopri</div>-->
-          <p class="sector-slide__description">
-            Choose Clair, Breathe Clean Air.
-Keep the air quality of your spaces under control and ensure a high standard of wellbeing across your assets.
-          </p>
-        </article>
-
-        <!-- Slide 3 -->
-        <article class="sector-slide">
           <img
-            class="sector-slide__image"
-            src="assets/img/sectors/Project.jpg"
-            alt="Project tracking"
+            class="slider-card__image slider-card__image--hover"
+            src="assets/img/sectors/Air2.png"
+            alt="Placeholder image 2 hover"
           />
-          <h3 class="sector-slide__title">
-            <img
-              src="assets/img/sectors/welcome-project.png"
-              alt="Welcome Greeny"
-              class="sector-slide__title-image"
-            />
-          </h3>
-          <!--<div class="sector-slide__cta">Scopri</div>-->
-          <p class="sector-slide__description">
-            We guide you in achieving the most prestigious international certifications to increase the value of your property.
-Track the progress of your projects all the way to completion and customise your management reports.
-          </p>
-        </article>
+        </div>
+        <h2 class="slider-card__title">Welcome Air</h2>
+      </article>
 
-        <!-- Slide 4 -->
-        <article class="sector-slide">
+      <!-- CARD 3 -->
+      <article class="slider-card">
+        <div class="slider-card__image-wrapper">
           <img
-            class="sector-slide__image"
+            class="slider-card__image slider-card__image--primary"
+            src="assets/img/sectors/Project.png"
+            alt="Placeholder image 3"
+          />
+          <img
+            class="slider-card__image slider-card__image--hover"
+            src="assets/img/sectors/Project2.png"
+            alt="Placeholder image 3 hover"
+          />
+        </div>
+        <h2 class="slider-card__title">Welcome Monitoring</h2>
+      </article>
+
+      <!-- CARD 4 -->
+      <article class="slider-card">
+        <div class="slider-card__image-wrapper">
+          <img
+            class="slider-card__image slider-card__image--primary"
             src="assets/img/sectors/Glass.jpg"
-            alt="Project tracking"
+            alt="Placeholder image 4"
           />
-          <h3 class="sector-slide__title">
-            <img
-              src="assets/img/sectors/welcome-future.png"
-              alt="Welcome Greeny"
-              class="sector-slide__title-image"
-            />
-          <!--</h3>
-          <p class="sector-slide__description">
-            L'adeguamento energetico non è solo un obbligo normativo, è un investimento strategico. 
-            Utilizza il nostro simulatore basato sui dati medi del settore immobiliare (Retail &amp; Office).
-            Trasformiamo i tuoi asset immobiliari con tecnologie all'avanguardia per l'efficienza energetica. 
-            Partner di eccellenza per il settore lusso e retail.
-          </p>-->
-
-          <!-- SIMULATORE DI RISPARMIO -->
-          <!--<div class="sector-slide__simulator">
-
-            <div class="simulator-card">
-               Input 1: Superficie
-              <div class="simulator-field">
-                <label class="simulator-label">
-                  <span>Superficie Immobile (mq)</span>
-                  <span id="sqm-display" class="simulator-value">1.300 mq</span>
-                </label>
-                <input
-                  type="range"
-                  id="sqm-slider"
-                  min="100"
-                  max="10000"
-                  step="100"
-                  value="1000"
-                  class="simulator-slider"
-                />
-              </div>
-
-             Input 2: Spesa annua
-              <div class="simulator-field">
-                <label class="simulator-label">
-                  <span>Spesa Energetica Annua Attuale (&euro;)</span>
-                  <span id="cost-display" class="simulator-value">&euro; 50.000</span>
-                </label>
-                <input
-                  type="range"
-                  id="cost-slider"
-                  min="10000"
-                  max="1000000"
-                  step="5000"
-                  value="50000"
-                  class="simulator-slider"
-                />
-              </div>
-
-              Risultato 
-              <div class="simulator-result">
-                <p class="simulator-result__label">
-                  Risparmio Annuo Stimato
-                </p>
-                <div id="savings-result" class="simulator-result__value">
-                  &euro; 15.000
-                </div>
-                <div class="simulator-result__co2">
-                  <span class="simulator-co2-icon">CO₂</span>
-                  <span id="co2-result">
-                    Riduzione CO2 stimata: 12.0 Tonnellate/anno
-                  </span>
-                </div>
-              </div>
-
-              <p class="simulator-note">
-                *Stima basata su un efficientamento medio del 30% (Standard LEED/BREEAM).
-              </p>
-            </div>
-          </div>-->
-        </article>
-
-        <!-- Slide 5 -->
-        <!--<article class="sector-slide">
           <img
-            class="sector-slide__image"
-            src="assets/img/sectors/traslochi.jpg"
-            alt="Imprese di Traslochi"
+            class="slider-card__image slider-card__image--hover"
+            src="assets/img/sectors/Glass.jpg"
+            alt="Placeholder image 4 hover"
           />
-          <h3 class="sector-slide__title">Imprese di Traslochi</h3>
-          <div class="sector-slide__cta">Scopri</div>
-          <p class="sector-slide__description">
-            Kit completi per traslochi professionali: scatole rinforzate, protezioni
-            e materiali di riempimento per ogni tipologia di oggetto.
-          </p>
-        </article>-->
-
-        <!-- Slide 6 -->
-        <!--<article class="sector-slide">
-          <img
-            class="sector-slide__image"
-            src="assets/img/sectors/fiere-negozi.jpg"
-            alt="Allestimento di fiere e negozi"
-          />
-          <h3 class="sector-slide__title">Allestimento di fiere e negozi</h3>
-          <div class="sector-slide__cta">Scopri</div>
-          <p class="sector-slide__description">
-            Imballi studiati per materiali espositivi e arredi temporanei,
-            perfetti per montaggi e smontaggi rapidi.
-          </p>
-        </article>-->
-
-        <!-- Slide 7 -->
-         <!--<article class="sector-slide">
-          <img
-            class="sector-slide__image"
-            src="assets/img/sectors/stampa-grafica.jpg"
-            alt="Industria Stampa e Grafica"
-          />
-          <h3 class="sector-slide__title">Industria Stampa e Grafica</h3>
-         <div class="sector-slide__cta">Scopri</div>
-          <p class="sector-slide__description">
-            Protezione dedicata a stampati, cataloghi e materiale promozionale,
-            per consegne impeccabili al cliente finale.
-          </p>
-        </article>-->
-
-        <!-- Slide 8 -->
-        <!--<article class="sector-slide">
-          <img
-            class="sector-slide__image"
-            src="assets/img/sectors/mobile.jpg"
-            alt="Industria del Mobile"
-          />
-          <h3 class="sector-slide__title">Industria del Mobile</h3>
-          <div class="sector-slide__cta">Scopri</div>
-          <p class="sector-slide__description">
-            Imballaggi su misura per mobili e arredi, pensati per ridurre
-            urti, graffi e danneggiamenti durante il trasporto.
-          </p>
-        </article>-->
-
-        <!-- Slide 9 -->
-        <!--<article class="sector-slide">
-          <img
-            class="sector-slide__image"
-            src="assets/img/sectors/bricolage-faidate.jpg"
-            alt="Bricolage e Fai da te"
-          />
-          <h3 class="sector-slide__title">Bricolage e Fai da te</h3>
-          <div class="sector-slide__cta">Scopri</div>
-          <p class="sector-slide__description">
-            Soluzioni pensate per la distribuzione retail e il fai da te,
-            con packaging pratici, resistenti e facilmente stoccabili.
-          </p>
-        </article>-->
-      </div>
+        </div>
+        <h2 class="slider-card__title">Stay tuned for 2026</h2>
+      </article>
     </div>
-  </section>
+  </div>
   
   <!-- PARTNERS -->
 
@@ -2440,12 +1836,6 @@ Track the progress of your projects all the way to completion and customise your
             </li>
           </ul>-->
         </div>
-
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-2">
-          <img src="assets/img/partners/slot1-logo3.png" alt="Partner slot 1-3">
-          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2"> 
-        </div>
       </article>
 
       <!-- SLOT 2 -->
@@ -2471,12 +1861,6 @@ Track the progress of your projects all the way to completion and customise your
             </li>
           </ul>-->
         </div>
-
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
-          <img src="assets/img/partners/slot1-logo5.png" alt="Partner slot 1-4">
-          <img src="assets/img/partners/slot1-logo9.png" alt="Partner slot 1-2">          
-        </div>
       </article>
 
       <!-- SLOT 3 -->
@@ -2501,10 +1885,6 @@ Track the progress of your projects all the way to completion and customise your
             </li>
           </ul>-->
         </div>
-
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
-        </div>
       </article>
 
       <!-- SLOT 4 -->
@@ -2522,10 +1902,6 @@ Track the progress of your projects all the way to completion and customise your
               </ul>
             </li>
           </ul>-->
-        </div>
-
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
         </div>
       </article>
 
@@ -2545,10 +1921,6 @@ Track the progress of your projects all the way to completion and customise your
             </li>
           </ul>-->
         </div>
-
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
-        </div>
       </article>
 
       <!-- SLOT 6 -->
@@ -2567,9 +1939,131 @@ Track the progress of your projects all the way to completion and customise your
             </li>
           </ul>-->
         </div>
+      </article>
 
-        <div class="partners-logos">
-          <img src="assets/img/partners/slot1-logo2.png" alt="Partner slot 1-1">
+      <!-- SLOT 7 -->
+      <article class="service-item service-7">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Audemars_Piguet_logo.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 8 -->
+      <article class="service-item service-8">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Prada-Logo.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 9 -->
+      <article class="service-item service-9">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/zegna6621.logowik.com.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 10 -->
+      <article class="service-item service-10">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Kering-logo.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 11 -->
+      <article class="service-item service-11">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/LVMH-logo.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 12 -->
+      <article class="service-item service-12">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/Kering-logo.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
+        </div>
+      </article>
+
+      <!-- SLOT 13 -->
+      <article class="service-item service-13">
+        <div class="section-title">
+          <img src="assets/img/partners/logos/OTB_LOGOsansFond.png" alt="Partner6">
+        </div>
+
+        <div class="details-list">
+          <!-- <ul>
+            <li>
+              <strong><a href="#">Titolo voce principale</a></strong>
+              <ul>
+                <li>Descrizione sintetica del servizio o partnership.</li>
+              </ul>
+            </li>
+          </ul>-->
         </div>
       </article>
 
@@ -2602,103 +2096,48 @@ Track the progress of your projects all the way to completion and customise your
       }
     });
   </script>
-
-  <script>
-    // CAROUSEL SETTORI
-    (function () {
-      const track   = document.getElementById("sectorsTrack");
-      const slides  = Array.from(track.querySelectorAll(".sector-slide"));
-      const prevBtn = document.querySelector(".sectors-carousel__arrow--prev");
-      const nextBtn = document.querySelector(".sectors-carousel__arrow--next");
-
-      if (!track || !slides.length || !prevBtn || !nextBtn) return;
-
-      let currentIndex = 0;
-
-      function setActiveSlide(index) {
-        currentIndex = (index + slides.length) % slides.length;
-
-        slides.forEach((slide, i) => {
-          slide.classList.toggle("is-active", i === currentIndex);
-        });
-
-        slides[currentIndex].scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest"
-        });
-      }
-
-      prevBtn.addEventListener("click", () => {
-        setActiveSlide(currentIndex - 1);
-      });
-
-      nextBtn.addEventListener("click", () => {
-        setActiveSlide(currentIndex + 1);
-      });
-
-      slides.forEach((slide, index) => {
-        slide.addEventListener("click", () => {
-          setActiveSlide(index);
-        });
-      });
-
-      window.addEventListener("load", () => {
-        setActiveSlide(0);
-      });
-
-      window.addEventListener("resize", () => {
-        slides[currentIndex].scrollIntoView({
-          behavior: "auto",
-          inline: "center",
-          block: "nearest"
-        });
-      });
-    })();
-  </script>
   <script>
     (function () {
-      const header  = document.querySelector(".site-header");
+      const header = document.querySelector(".site-header");
+      const hero   = document.querySelector(".hero-section");
       const logoImg = document.querySelector(".header-logo img");
 
-      if (!header || !logoImg) return;
+      if (!header || !hero || !logoImg) return;
 
-      const defaultSrc = logoImg.getAttribute("data-src-default") || logoImg.src;
+      const defaultSrc = logoImg.getAttribute("data-src-default")  || logoImg.src;
       const compactSrc = logoImg.getAttribute("data-src-compact") || defaultSrc;
 
-      function applyDesktopState() {
-        const y = window.scrollY || window.pageYOffset || 0;
+      function getThreshold() {
+        // punto in cui il logo entra nella barra
+        return hero.offsetHeight * 0.35;
+      }
 
-        if (y > 10) {
+      let threshold = 0;
+
+      function updateThreshold() {
+        threshold = getThreshold();
+        onScroll(); // riallinea stato all'avvio/resize
+      }
+
+      function onScroll() {
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        if (scrollY > threshold) {
+          // stato compatto
           header.classList.add("site-header--compact");
           logoImg.src = compactSrc;
         } else {
+          // stato “hero” grande
           header.classList.remove("site-header--compact");
           logoImg.src = defaultSrc;
         }
       }
 
-      function updateHeader() {
-        const isMobile = window.innerWidth <= 768;
-
-        if (isMobile) {
-          // MOBILE: header sempre compatto, niente animazione “logo che scende”
-          header.classList.add("site-header--compact");
-          logoImg.src = compactSrc;
-        } else {
-          // DESKTOP: mantieni l’effetto originale
-          applyDesktopState();
-        }
-      }
-
-      window.addEventListener("load", updateHeader);
-      window.addEventListener("scroll", updateHeader);
-      window.addEventListener("resize", updateHeader);
+      window.addEventListener("load", updateThreshold);
+      window.addEventListener("resize", updateThreshold);
+      window.addEventListener("scroll", onScroll);
     })();
   </script>
-
-
-
   <div
     class="contact-panel"
     id="contactPanel"
@@ -2749,7 +2188,7 @@ Track the progress of your projects all the way to completion and customise your
                   <a href="tel:">+44 75545-93399</a>
                 </div>
                 <div class="contact-panel__label-sub">
-                  Mon-Fri, 9:00–18:00
+                  Contact us via Phone or WhatsApp
                 </div>
               </div>
             </li>
@@ -2772,9 +2211,9 @@ Track the progress of your projects all the way to completion and customise your
               </div>
             </li>
 
-            <li class="contact-panel__item">
+            <!--<li class="contact-panel__item">
               <span class="contact-panel__icon">
-                <!-- WhatsApp -->
+                WhatsApp 
                 <img src="assets/img/contatti//whatsapp/whatsapp white.png"
                     alt=""
                     width="20"
@@ -2788,7 +2227,7 @@ Track the progress of your projects all the way to completion and customise your
                   Contact us via web
                 </div>
               </div>
-            </li>
+            </li>-->
           </ul>
 
           <hr class="contact-panel__divider" />
@@ -3010,7 +2449,7 @@ Track the progress of your projects all the way to completion and customise your
             <label class="footer-consent">
               <input type="checkbox" name="newsletter_consent" required />
               <span>
-                Clicking on "Subscription", confirm to have written the
+                Clicking on "Subsription", confirm to have written the
                 <a href="#privacy">Privacy</a> and that you want to receive
                 the newsletter e marketing communications.
               </span>
@@ -3020,22 +2459,22 @@ Track the progress of your projects all the way to completion and customise your
           <ul class="footer-social" aria-label="Seguici sui social">
             <li>
               <a href="https://facebook.com/fgb.studio/" aria-label="Facebook" target="_blank" rel="noopener">
-                <img src="assets/img/icons/facebook.png" alt="" />
+                <img src="assets/img/icons/facebook_swapped.png" alt="" />
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/fgb.studio/" aria-label="Instagram" target="_blank" rel="noopener">
-                <img src="assets/img/icons/instagram.png" alt="" />
+                <img src="assets/img/icons/instagram_swapped.png" alt="" />
               </a>
             </li>
             <li>
               <a href="https://it.linkedin.com/company/fgb-studio-future-green-building" aria-label="LinkedIn" target="_blank" rel="noopener">
-                <img src="assets/img/icons/linkedin.png" alt="" />
+                <img src="assets/img/icons/linkedin_swapped.png" alt="" />
               </a>
             </li>
             <li>
               <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener">
-                <img src="assets/img/icons/youtube.png" alt="" />
+                <img src="assets/img/icons/youtube_swapped.png" alt="" />
               </a>
             </li>
           </ul>
@@ -3092,7 +2531,7 @@ Track the progress of your projects all the way to completion and customise your
           </a>
         </div>
         <div class="footer-bottom-logo">
-          <img src="assets/img/Logo/Logopayoff/PNG/green.png" alt="Future Green Building" />
+          <img src="assets/img/Logo/Logopayoff/PNG/white.png" alt="Future Green Building" />
         </div>
       </div>
     </div>
@@ -3674,8 +3113,3 @@ Track the progress of your projects all the way to completion and customise your
 
 </body>
 </html>
-
-
-
-
-
