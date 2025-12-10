@@ -109,7 +109,7 @@
     }
 
     .header-logo img {
-      height: 150px; /* logo grande in apertura */
+      height: 200px; /* logo grande in apertura */
       display: block;
       transition:
         height 0.45s ease,
@@ -432,7 +432,9 @@
       line-height: 1.3;
       text-align: center;
       letter-spacing: 0.03em;
-      color: #000;
+      color: #006367;
+      font-family: "Futura Std", "Futura", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 700;
     }
 
     /* TABLET / MEZZA FINESTRA: 2 COLONNE */
@@ -1137,19 +1139,19 @@
       transform: translateY(-4px);
     }
 
-    /* Overlay ghiaccio */
+    /* Overlay ghiaccio 
     .service-item::after {
       content: "";
       position: absolute;
       inset: 0;
-      /* effetto “ghiaccio” leggero di base */
+      /* effetto “ghiaccio” leggero di base
       backdrop-filter: blur(0px);
       -webkit-backdrop-filter: blur(0px);
       transition:
         background 0.7s ease-in-out,
         backdrop-filter 0.7s ease-in-out,
         -webkit-backdrop-filter 0.7s ease-in-out;
-      z-index: 1;
+      z-index: 1; */
     }
 
     .service-item:hover::after {
@@ -1165,7 +1167,7 @@
 
     /* Background per ogni slot (cambiali coi tuoi) */
     .service-1 { background-image: url("assets/img/services/Kering.jpg"); }
-    .service-2 { background-image: url("assets/img/services/louis-vuitton.webp"); }
+    .service-2 { background-image: url("assets/img/services/Boucheron.webp"); }
     .service-3 { background-image: url("assets/img/services/Prada.avif"); }
     .service-4 { background-image: url("assets/img/services/ferragamo.jpg"); }
     .service-5 { background-image: url("assets/img/services/Jimmy-Choo-scaled.jpg"); }
@@ -1201,6 +1203,7 @@
     }
     .service-item:hover .section-title img {
       transform: scale(1.3);
+      display: none;
     }
     /* Logo brand-partner */
     .section-title img {
@@ -1209,6 +1212,7 @@
       display: block;
       object-fit: contain;
       filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.7)); /* leggero glow come il testo */
+      display: none;
     }
 
 
@@ -1819,7 +1823,7 @@
             alt="Placeholder image 1 hover"
           />
         </div>
-        <h2 class="slider-card__title">Welcome Greeny</h2>
+        <h2 class="slider-card__title">WELCOME GREENY</h2>
       </article>
 
       <!-- CARD 2 -->
@@ -1836,7 +1840,7 @@
             alt="Placeholder image 2 hover"
           />
         </div>
-        <h2 class="slider-card__title">Welcome Air</h2>
+        <h2 class="slider-card__title">WELCOME CLAIR</h2>
       </article>
 
       <!-- CARD 3 -->
@@ -1853,7 +1857,7 @@
             alt="Placeholder image 3 hover"
           />
         </div>
-        <h2 class="slider-card__title">Welcome Monitoring</h2>
+        <h2 class="slider-card__title">WELCOME MONITORING</h2>
       </article>
 
       <!-- CARD 4 -->
@@ -1870,7 +1874,7 @@
             alt="Placeholder image 4 hover"
           />
         </div>
-        <h2 class="slider-card__title">Stay tuned for 2026</h2>
+        <h2 class="slider-card__title">STAY TUNED FOR 2026</h2>
       </article>
     </div>
   </div>
@@ -2347,6 +2351,10 @@
                     <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
                   </li>
                   <li>
+                    <strong>LOANO</strong><br>
+                    <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
+                  </li>
+                  <li>
                     <strong>LONDON</strong><br>
                     <!-- <span>XX Rue Exemple, 75000 Paris</span> -->
                   </li>
@@ -2553,7 +2561,7 @@
 
         <div class="footer-bottom-cta">
           <a href="#store-locator" class="footer-cta-link"> 
-            AIX-EN-PROVENCE | AMSTERDAM | DUBAI | HO CHI MINH | LONDON | LOS ANGELES | MIAMI | MILAN | NEW YORK | ROME | SHANGHAI | SINGAPORE | TAICHUNG | TOKYO
+            AIX-EN-PROVENCE | AMSTERDAM | DUBAI | HO CHI MINH | LOANO | LONDON | LOS ANGELES | MIAMI | MILAN | NEW YORK | ROME | SHANGHAI | SINGAPORE | TAICHUNG | TOKYO
           </a>
         </div>
         <div class="footer-bottom-logo">
