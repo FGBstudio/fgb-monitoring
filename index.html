@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FGB Monitoring</title>
   <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fgb: {
+              DEFAULT: '#006367',
+              dark: '#004f52',
+              light: '#007a7e',
+              accent: '#ffffff'
+            }
+          },
+          fontFamily: {
+            sans: ['Futura', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
 
   <style>
 
@@ -47,7 +69,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 20;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -119,7 +141,8 @@
     }
 
     .header-logo img {
-      height: 200px; /* logo grande in apertura */
+      height: 250px;
+      max-width: none;
       display: block;
       transition:
         height 0.45s ease,
@@ -341,6 +364,11 @@
         letter-spacing: 0.12em;
       }
 
+      .header-logo img {
+        height: 150px;   /* puoi mettere 90–120 a gusto */
+        width: auto;
+      }
+
       .header-logo {
         top: 7rem;
       }
@@ -475,39 +503,44 @@
 /* ========== FOOTER ========== */
 
     .site-footer {
-      width: 100%;          /* basta e avanza */
-      margin: 0;            /* niente margini strani */
-
+      width: 100%;
       background: #006367;
       color: #ffffff;
-      padding: 48px 10px 32px;
+      padding: 48px 20px 32px;
       font-size: 14px;
-
       border-top: 1px solid #ffffff;
-      border-bottom: 1px solid #e2e2e2;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     .footer-inner {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
-    /* TOP: newsletter + colonne nav */
-    .footer-top {
+    .footer-layout {
       display: flex;
-      flex-wrap: wrap;
-      gap: 56px;
-
-      /* NIENTE border qui, li abbiamo spostati su .site-footer */
-      border-top: none;
-      border-bottom: none;
-
-      padding: 40px 0 36px;
+      flex-direction: column;
+      gap: 60px;
     }
 
-    /* --- NEWSLETTER --- */
-    .footer-newsletter {
-      flex: 1 1 340px;
+    
+
+    @media (min-width: 1024px) {
+      .footer-layout {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+
+    .footer-left-col {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
     }
 
     .footer-newsletter__title {
@@ -515,58 +548,50 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 24px;
-    }
-
-    .footer-newsletter__form {
-      margin-bottom: 18px;
+      font-weight: 600;
     }
 
     .footer-input-wrap {
-      position: relative;
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 10px;
+      border-bottom: 1px solid #ffffff;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
     }
 
     .footer-input {
       flex: 1;
       border: none;
-      border-bottom: 1px solid #ffffff;
-      padding: 8px 0;
-      font: inherit;
       background: transparent;
+      color: white;
       outline: none;
-    }
-
-    .footer-input::placeholder {
-      color: #777777;
-    }
-
-    .footer-newsletter__submit {
-      border: none;
-      background: none;
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 0;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .footer-newsletter__submit::after {
-      content: "→";
-      margin-left: 8px;
+      font-family: inherit;
       font-size: 14px;
     }
 
-    .footer-consent {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
+    .footer-input::placeholder {
+      color: #cccccc;
+    }
+
+    .footer-newsletter__submit {
+      background: none;
+      border: none;
+      color: white;
+      text-transform: uppercase;
       font-size: 12px;
-      line-height: 1.5;
-      color: #777777;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .footer-consent {
+      font-size: 11px;
+      color: #cccccc;
+      line-height: 1.4;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
     }
 
     .footer-consent input {
@@ -594,199 +619,203 @@
       display: block;
     }
 
-    /* --- COLONNE DI NAVIGAZIONE --- */
-    .footer-nav-columns {
-      flex: 2 1 580px;
-      display: flex;
-      flex-wrap: nowrap;          /* niente wrap: 4 colonne sulla stessa riga */
-      justify-content: space-between;
-      gap: 70px;
+    .links-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 20px;
+      row-gap: 40px;
     }
 
-    .footer-nav-col {
-      flex: 0 0 23%;              /* 4 colonne più strette ma allineate */
-      min-width: 0;
-    }
-
-    .footer-nav-title {
-      font-size: 14px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      color: #ffffffb4
-    }
-
-    .footer-nav-list {
-      list-style: none;
-    }
-
-    .footer-nav-list li + li {
-      margin-top: 6px;
-    }
-
-    .footer-nav-list a {
+    .nav-category h4 {
       font-size: 13px;
-      text-decoration: none;
-    }
-
-    /* --- BOTTOM BAR --- */
-    /* stacked, allineati a sinistra */
-    .footer-bottom {
-      display: flex;
-      flex-direction: column;   /* © e città uno sotto l’altra */
-      align-items: center;
-      gap: 6px;
-      padding-top: 20px;
-    }
-
-    .footer-copy {
-      font-size: 12px;
-      color: #ffffffa6;
-    }
-
-    .footer-bottom-cta {
-      display: block;            /* occupa tutta la riga sotto */
-    }
-
-    .footer-cta-link {
-      font-size: 15px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .nav-category ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .nav-category a {
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-      cursor: pointer;
-      color: #ffffff;
-      white-space: nowrap;
-      display: block;      /* diventa a tutta riga */
-      margin: 0 auto;      /* centra orizzontalmente */
-      text-align: center;  /* centra il testo dentro */     
+      color: white;
+      font-size: 14px;
+      transition: opacity 0.2s;
+      font-weight: 400;
     }
 
-    .footer-cta-link:hover {
-      border-bottom-color: #ffffff;
+    .nav-category a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
     }
 
-    .footer-cta-link--muted {
-      background: none;
+    .footer-right-col {
+      flex: 1;
+      width: 100%;
+    }
+
+    .widget-container {
+      position: relative;
+      height: 600px;
+      background-color: #004f52;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .location-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .location-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .location-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 2px;
+    }
+
+    .footer-bottom {
+      margin-top: 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .city-list {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      line-height: 1.8;
+      font-size: 11px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Icon img base size */
+    .mini-icon {
+      width: 16px;
+      height: 16px;
+      display: block;
     }
 
     .footer-bottom-logo {
-      width: 100%;
-      text-align: center;
-      margin-top: 12px; /* se vuoi un po’ di spazio sopra */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
     }
 
     .footer-bottom-logo img {
-      display: inline-block;
       width: 900px;
       height: auto;
     }
 
-
-    /* --- RESPONSIVE FOOTER --- */
-    @media (max-width: 900px) {
-      .site-footer {
-        width: 100%;
-        margin: 0;
-        padding: 32px 20px 24px;
-        overflow-x: hidden;
-      }
-
-      .footer-inner {
-        max-width: 100%;
-      }
-
-      .footer-top {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 32px;
-        padding: 28px 0 24px;
-      }
-
-      .footer-newsletter {
-        flex: 0 0 auto;
-        width: 100%;
-      }
-
-      .footer-nav-columns {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: 100%;
-      }
-
-      .footer-nav-col {
-        flex: 0 0 auto;
-        width: 100%;
-        min-width: 0;
-        margin-bottom: 0;
-      }
-
-      .footer-bottom {
-        align-items: flex-start;
-        gap: 8px;
-        padding-top: 16px;
-      }
-
-      .footer-bottom-logo img {
-        max-width: 100%;
-        height: auto;
-      }
+    .links-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 20px;
+      row-gap: 40px;
     }
 
-    @media (max-width: 600px) {
-      .site-footer {
-        padding: 28px 16px 20px;
-      }
+    .nav-category h4 {
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
 
-      .footer-top {
-        gap: 24px;
-      }
+    .nav-category ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-      .footer-input-wrap {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
+    .nav-category a {
+      text-decoration: none;
+      color: white;
+      font-size: 14px;
+      transition: opacity 0.2s;
+      font-weight: 400;
+    }
 
-      .footer-newsletter__submit {
-        font-size: 11px;
-      }
+    .nav-category a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
 
-      .footer-social {
-        gap: 12px;
-        margin-top: 20px;
-        font-size: 0;
-      }
+    .footer-right-col {
+      flex: 1;
+      width: 100%;
+    }
 
-      .footer-social a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
+    .widget-container {
+      position: relative;
+      height: 600px;
+      background-color: #004f52;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-      .footer-social img {
-        width: 20px;
-        height: 20px;
-        display: block;
-      }
+    .location-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
 
-      .footer-cta-link {
-        white-space: normal;
-        display: block;
-        line-height: 1.4;
-      }
+    .location-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
 
-      .footer-bottom {
-        align-items: flex-start;
-      }
+    .location-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 2px;
+    }
 
-      .footer-bottom-logo {
-        text-align: left;
-        margin-top: 10px;
-      }
+    .footer-bottom {
+      margin-top: 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .city-list {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      line-height: 1.8;
+      font-size: 11px;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     /* ========== CONTACT SIDE PANEL ========== */
@@ -1820,98 +1849,99 @@
       <h1 class="hero-title">THE HOLIDAY SEASON</h1>
       <div class="hero-ctas">
         <a href="https://fgb-studio.com/" class="hero-link">STUDIO</a>
-        <a href="#monitoring-section" class="hero-link">MONITORING</a>
+        <a href="#Monitoring-section" class="hero-link">MONITORING</a>
       </div>
     </div>
   </section>
 
   <!-- ========== SEZIONE NEWS ========== -->
-  <div class="slider-grid-wrapper">
-    <div class="slider-grid">
-      <!-- CARD 1 -->
-      <article class="slider-card">
-        <div class="slider-card__image-wrapper">
-          <!-- immagine principale -->
-          <img
-            class="slider-card__image slider-card__image--primary"
-            src="assets/img/sectors/Energy.jpg"
-            alt="Placeholder image 1"
-          />
-          <!-- immagine on hover -->
-          <img
-            class="slider-card__image slider-card__image--hover"
-            src="assets/img/sectors/Energy2.png"
-            alt="Placeholder image 1 hover"
-          />
-        </div>
-        <h2 class="slider-card__title">
-          <span class="title-betmo">Welcome</span>
-          <span class="title-futura"> GREENY</span>
-        </h2>
-      </article>
+  <section id="Monitoring-section">
+    <div class="slider-grid-wrapper">
+      <div class="slider-grid">
+        <!-- CARD 1 -->
+        <article class="slider-card">
+          <div class="slider-card__image-wrapper">
+            <!-- immagine principale -->
+            <img
+              class="slider-card__image slider-card__image--primary"
+              src="assets/img/sectors/Energy.jpg"
+              alt="Placeholder image 1"
+            />
+            <!-- immagine on hover -->
+            <img
+              class="slider-card__image slider-card__image--hover"
+              src="assets/img/sectors/Energy2.png"
+              alt="Placeholder image 1 hover"
+            />
+          </div>
+          <h2 class="slider-card__title">
+            <span class="title-betmo">Welcome</span>
+            <span class="title-futura"> GREENY</span>
+          </h2>
+        </article>
 
-      <!-- CARD 2 -->
-      <article class="slider-card">
-        <div class="slider-card__image-wrapper">
-          <img
-            class="slider-card__image slider-card__image--primary"
-            src="assets/img/sectors/Air.jpg"
-            alt="Placeholder image 2"
-          />
-          <img
-            class="slider-card__image slider-card__image--hover"
-            src="assets/img/sectors/Air2.png"
-            alt="Placeholder image 2 hover"
-          />
-        </div>
-        <h2 class="slider-card__title">
-          <span class="title-betmo">Welcome</span>
-          <span class="title-futura"> CLAIR</span>
-        </h2>
-      </article>
+        <!-- CARD 2 -->
+        <article class="slider-card">
+          <div class="slider-card__image-wrapper">
+            <img
+              class="slider-card__image slider-card__image--primary"
+              src="assets/img/sectors/Air.jpg"
+              alt="Placeholder image 2"
+            />
+            <img
+              class="slider-card__image slider-card__image--hover"
+              src="assets/img/sectors/Air2.png"
+              alt="Placeholder image 2 hover"
+            />
+          </div>
+          <h2 class="slider-card__title">
+            <span class="title-betmo">Welcome</span>
+            <span class="title-futura"> CLAIR</span>
+          </h2>
+        </article>
 
-      <!-- CARD 3 -->
-      <article class="slider-card">
-        <div class="slider-card__image-wrapper">
-          <img
-            class="slider-card__image slider-card__image--primary"
-            src="assets/img/sectors/Project.png"
-            alt="Placeholder image 3"
-          />
-          <img
-            class="slider-card__image slider-card__image--hover"
-            src="assets/img/sectors/Project2.png"
-            alt="Placeholder image 3 hover"
-          />
-        </div>
-        <h2 class="slider-card__title">
-          <span class="title-betmo">Our</span>
-          <span class="title-futura"> MONITORING</span>
-        </h2>
-      </article>
+        <!-- CARD 3 -->
+        <article class="slider-card">
+          <div class="slider-card__image-wrapper">
+            <img
+              class="slider-card__image slider-card__image--primary"
+              src="assets/img/sectors/Project.png"
+              alt="Placeholder image 3"
+            />
+            <img
+              class="slider-card__image slider-card__image--hover"
+              src="assets/img/sectors/Project2.png"
+              alt="Placeholder image 3 hover"
+            />
+          </div>
+          <h2 class="slider-card__title">
+            <span class="title-betmo">Our</span>
+            <span class="title-futura"> MONITORING</span>
+          </h2>
+        </article>
 
-      <!-- CARD 4 -->
-      <article class="slider-card">
-        <div class="slider-card__image-wrapper">
-          <img
-            class="slider-card__image slider-card__image--primary"
-            src="assets/img/sectors/Glass.jpg"
-            alt="Placeholder image 4"
-          />
-          <img
-            class="slider-card__image slider-card__image--hover"
-            src="assets/img/sectors/Glass.jpg"
-            alt="Placeholder image 4 hover"
-          />
-        </div>
-        <h2 class="slider-card__title">
-          <span class="title-betmo">Stay tuned for</span>
-          <span class="title-futura"> 2026</span>
-        </h2>
-      </article>
+        <!-- CARD 4 -->
+        <article class="slider-card">
+          <div class="slider-card__image-wrapper">
+            <img
+              class="slider-card__image slider-card__image--primary"
+              src="assets/img/sectors/Glass.jpg"
+              alt="Placeholder image 4"
+            />
+            <img
+              class="slider-card__image slider-card__image--hover"
+              src="assets/img/sectors/Glass.jpg"
+              alt="Placeholder image 4 hover"
+            />
+          </div>
+          <h2 class="slider-card__title">
+            <span class="title-betmo">Stay tuned for</span>
+            <span class="title-futura"> 2026</span>
+          </h2>
+        </article>
+      </div>
     </div>
-  </div>
-  
+  </section>
   <!-- PARTNERS -->
 
   <section id="partners-strip">
@@ -2489,111 +2519,523 @@
   <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-newsletter">
-          <h4 class="footer-newsletter__title">
-            Subscribe to our newsletter
-          </h4>
+      <div class="footer-layout">
+        <!-- LEFT COLUMN -->
+        <div class="footer-left-col">
+          <!-- Newsletter -->
+          <div class="footer-newsletter">
+            <h4 class="footer-newsletter__title">Subscribe to our newsletter</h4>
+            <form class="footer-newsletter__form" action="#" method="post" novalidate>
+              <div class="footer-input-wrap">
+                <input
+                  type="email"
+                  name="newsletter_email"
+                  class="footer-input"
+                  placeholder="Fill your e-mail address*"
+                  required
+                />
+                <button
+                  type="button"
+                  class="footer-newsletter__submit"
+                  id="open-newsletter-form"
+                >
+                  Subscribe
+                </button>
+              </div>
 
-          <form class="footer-newsletter__form" action="#" method="post" novalidate>
-            <div class="footer-input-wrap">
-              <input
-                type="email"
-                name="newsletter_email"
-                class="footer-input"
-                placeholder="Fill your e-mail address*"
-                required
-              />
-              <button
-                type="button"
-                class="footer-newsletter__submit"
-                id="open-newsletter-form"
-              >
-                Subscribe
-              </button>
+              <label class="footer-consent">
+                <input type="checkbox" name="newsletter_consent" required />
+                <span>
+                  Clicking on "Subsription", confirm to have written the
+                  <a href="#privacy">Privacy</a> and that you want to receive
+                  the newsletter e marketing communications.
+                </span>
+              </label>
+            </form>
+
+            <ul class="footer-social" aria-label="Seguici sui social">
+              <li>
+                <a href="https://facebook.com/fgb.studio/" aria-label="Facebook" target="_blank" rel="noopener">
+                  <img src="assets/img/icons/facebook_swapped.png" alt="" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/fgb.studio/" aria-label="Instagram" target="_blank" rel="noopener">
+                  <img src="assets/img/icons/instagram_swapped.png" alt="" />
+                </a>
+              </li>
+              <li>
+                <a href="https://it.linkedin.com/company/fgb-studio-future-green-building" aria-label="LinkedIn" target="_blank" rel="noopener">
+                  <img src="assets/img/icons/linkedin_swapped.png" alt="" />
+                </a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener">
+                  <img src="assets/img/icons/youtube_swapped.png" alt="" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Links Grid -->
+          <div class="links-grid">
+            <div class="nav-category">
+              <h4>Need help?</h4>
+              <ul>
+                <li><a href="tel:+447554593399">Call us +44 75545-93399</a></li>
+                <li><a href="https://wa.me/447554593399" target="_blank">Contuct us on WhatsApp</a></li>
+                <li><a href="#contatti">Contacts</a></li>
+                <li><a href="#faq">FAQ</a></li>
+              </ul>
             </div>
 
-            <label class="footer-consent">
-              <input type="checkbox" name="newsletter_consent" required />
-              <span>
-                Clicking on "Subsription", confirm to have written the
-                <a href="#privacy">Privacy</a> and that you want to receive
-                the newsletter e marketing communications.
-              </span>
-            </label>
-          </form>
+            <div class="nav-category">
+              <h4>Company</h4>
+              <ul>
+                <li><a href="https://fgb-studio.com/">Who We are</a></li>
+                <li><a href="https://fgb-studio.com/">Sustainability</a></li>
+                <li><a href="mailto:fgb@fgb-studio.com">Work with us</a></li>
+              </ul>
+            </div>
 
-          <ul class="footer-social" aria-label="Seguici sui social">
-            <li>
-              <a href="https://facebook.com/fgb.studio/" aria-label="Facebook" target="_blank" rel="noopener">
-                <img src="assets/img/icons/facebook_swapped.png" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="https://www.instagram.com/fgb.studio/" aria-label="Instagram" target="_blank" rel="noopener">
-                <img src="assets/img/icons/instagram_swapped.png" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="https://it.linkedin.com/company/fgb-studio-future-green-building" aria-label="LinkedIn" target="_blank" rel="noopener">
-                <img src="assets/img/icons/linkedin_swapped.png" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener">
-                <img src="assets/img/icons/youtube_swapped.png" alt="" />
-              </a>
-            </li>
-          </ul>
+            <div class="nav-category">
+              <h4>Services</h4>
+              <ul>
+                <li><a href="#monitoring-section">Servicies</a></li>
+                <li><a href="#monitoring-section">Products</a></li>
+                <li><a href="#partners-strip">Partners</a></li>
+              </ul>
+            </div>
+
+            <div class="nav-category">
+              <h4>Legal</h4>
+              <ul>
+                <li><a href="#privacy-policy" data-legal="privacy">Privacy</a></li>
+                <li><a href="#cookie-policy" data-legal="cookie">Cookie Policy</a></li>
+                <li><a href="#termini-condizioni" data-legal="terms">Terms and conditions</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div class="footer-nav-columns">
-          <div class="footer-nav-col">
-            <h4 class="footer-nav-title">Need Help?</h4>
-            <ul class="footer-nav-list">
-              <li><a href="tel:+447554593399">Call us +44 75545-93399</a></li>
-              <li><a href="https://wa.me/447554593399" target="_blank">Contuct us on WhatsApp</a></li>
-              <li><a href="#contatti">Contacts</a></li>
-              <li><a href="#faq">FAQ</a></li>
-            </ul>
-          </div>
+        <!-- RIGHT COLUMN: WIDGET -->
+        <div class="footer-right-col">
+          <div class="widget-container group">
+            <!-- Background image -->
+            <div class="absolute inset-0 z-0 bg-[#004f52]">
+              <img
+                id="w-image"
+                src="assets/img/offices/milano.jpg"
+                alt="Office View"
+                class="w-full h-full object-cover transition-all duration-700 ease-in-out opacity-100"
+              />
+              <div class="absolute inset-0 bg-gradient-to-r from-[#004f52] via-[#004f52]/70 to-transparent pointer-events-none"></div>
+            </div>
 
-          <div class="footer-nav-col">
-            <h4 class="footer-nav-title">Servicies</h4>
-            <ul class="footer-nav-list">
-              <li><a href="#monitoring-section">Servicies</a></li>
-              <li><a href="#monitoring-section">Products</a></li>
-              <li><a href="#partners-strip">Partners</a></li>
-            </ul>
-          </div>
+            <!-- Foreground content -->
+            <div class="relative z-20 flex flex-col h-full p-8 md:p-12">
+              <!-- Header -->
+              <div class="flex justify-between items-start mb-6 border-b border-white/20 pb-4 w-full md:w-1/2">
+                <div>
+                  <h2 class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-70 mb-1">
+                    Our Offices
+                  </h2>
+                  <h1 class="text-2xl font-light tracking-wide">
+                    FGB <span class="font-semibold">STUDIO</span>
+                  </h1>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse mt-2"></div>
+              </div>
 
-          <div class="footer-nav-col">
-            <h4 class="footer-nav-title">Company</h4>
-            <ul class="footer-nav-list">
-              <li><a href="https://fgb-studio.com/">Who We are</a></li>
-              <li><a href="https://fgb-studio.com/">Sustainability</a></li>
-              <li><a href="mailto:fgb@fgb-studio.com">Work with us</a></li>
-            </ul>
-          </div>
+              <!-- Main layout: info + list -->
+              <div class="flex flex-1 gap-6 mt-2 flex-col md:flex-row">
+                <!-- Active location info -->
+                <div id="widget-info" class="w-full md:w-[45%] mb-6 transition-all duration-300 transform">
+                  <h3 id="w-city" class="text-5xl font-medium mb-2">
+                    Paris
+                  </h3>
 
-          <div class="footer-nav-col">
-            <h4 class="footer-nav-title">Legale</h4>
-            <ul class="footer-nav-list">
-              <li><a href="#privacy-policy" data-legal="privacy">Privacy</a></li>
-              <li><a href="#cookie-policy" data-legal="cookie">Cookie Policy</a></li>
-              <li><a href="#termini-condizioni" data-legal="terms">Terms and conditions</a></li>
-            </ul>
+                  <div
+                    class="flex items-center gap-4 text-sm font-mono text-emerald-100 mb-4 bg-black/20 px-3 py-2 rounded-md w-fit backdrop-blur-sm border border-white/10"
+                  >
+                    <div class="flex items-center gap-2">
+                      <!-- CAMBIA I PATH DELLE ICONE SE SERVE -->
+                      <img src="assets/img/icons/clock_white.png" alt="Time" class="mini-icon" />
+                      <span id="w-time" class="tracking-widest">--:--</span>
+                    </div>
+                    <div class="w-px h-4 bg-white/30"></div>
+                    <div class="flex items-center gap-2">
+                      <img src="assets/img/icons/temperature_white.png" alt="Temperature" class="mini-icon" />
+                      <span id="w-temp" class="tracking-widest">--°C</span>
+                    </div>
+                  </div>
+
+                  <p id="w-desc" class="text-sm text-white/90 leading-relaxed mb-4">
+                    European hub for energy & ESG consulting, coordinating North Europe-country projects and global deployments.
+                  </p>
+
+                  <div id="w-tags" class="flex flex-wrap gap-2 mb-4 text-[10px] uppercase tracking-[0.15em] text-white/70">
+                    <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                      EU Office
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                      ESG · Sustainable Certifications
+                    </span>
+                  </div>
+
+                  <div class="text-xs text-white/70 space-y-1">
+                    <p id="w-address" class="font-medium">
+                      Paris · France
+                    </p>
+                    <p id="w-extra">
+                      paris@fgb-studio.com
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Locations list -->
+                <div class="w-full md:w-[55%] mt-2 md:mt-0">
+                  <p class="text-xs uppercase tracking-[0.2em] text-white/70 mb-3">
+                    Select a city
+                  </p>
+
+                  <div class="location-scroll h-[140px] md:h-[260px] overflow-y-auto space-y-2 pr-2">
+
+                    <!-- Aix-en-Provence -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="aixenprovence"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe · FR
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Aix-en-Provence
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">FR</span>
+                      </div>
+                    </button>
+
+                    <!-- Amsterdam -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="amsterdam"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Amsterdam
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">NL</span>
+                      </div>
+                    </button>
+
+                    <!-- Dubai -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="dubai"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Middle East
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Dubai
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">AE</span>
+                      </div>
+                    </button>
+
+                    <!-- Ho Chi Minh City -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="hochiminh"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Asia Pacific
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Ho Chi Minh City
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">VN</span>
+                      </div>
+                    </button>
+
+                    <!-- Loano -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="loano"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe · IT
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Loano
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">IT</span>
+                      </div>
+                    </button>
+
+                    <!-- London -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="london"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          London
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">UK</span>
+                      </div>
+                    </button>
+                    
+                    <!-- Los Angeles -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="losangeles"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          North America
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Los Angeles
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">US</span>
+                      </div>
+                    </button>
+
+                    <!-- Miami -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="miami"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          North America
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Miami
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">US</span>
+                      </div>
+                    </button>
+
+                    <!-- Milan -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="milan"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Milan
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">IT</span>
+                      </div>
+                    </button>
+
+                    
+
+                    <!-- New York -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="newyork"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          North America
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          New York
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">US</span>
+                      </div>
+                    </button>
+
+                    <!-- Shanghai -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="shanghai"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Asia Pacific
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Shanghai
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">CN</span>
+                      </div>
+                    </button>
+
+                    <!-- Paris -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/20 bg-white/10 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="paris"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe · HQ
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Paris
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span>
+                        <span class="font-mono tracking-widest">FR</span>
+                      </div>
+                    </button>
+           
+                    <!-- Taichung -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="taichung"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Asia Pacific
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Taichung
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">TW</span>
+                      </div>
+                    </button>
+
+                    <!-- Rome -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="rome"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Europe
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Rome
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">IT</span>
+                      </div>
+                    </button>
+
+                    <!-- Tokyo -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="tokyo"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Asia Pacific
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Tokyo
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">JP</span>
+                      </div>
+                    </button>
+
+
+                    <!-- Singapore -->
+                    <button
+                      type="button"
+                      class="group/item w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-left cursor-pointer transition-colors duration-300"
+                      data-location-id="singapore"
+                    >
+                      <div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
+                          Asia Pacific
+                        </div>
+                        <div class="text-sm font-medium text-white">
+                          Singapore
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2 text-[10px] text-white/70">
+                        <span class="dot w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                        <span class="font-mono tracking-widest">SG</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Bottom footer strip -->
       <div class="footer-bottom">
-        <p class="footer-copy">
-          © FGB studio 2025<!-- <span>P.IVA 00000000000</span>-->
-        </p>
-
+        <div>© 2025 FGB Studio — All rights reserved.</div>
         <div class="footer-bottom-cta">
-          <a href="#store-locator" class="footer-cta-link"> 
+          <a href="#store-locator" class="footer-cta-link">
             AIX-EN-PROVENCE | AMSTERDAM | DUBAI | HO CHI MINH | LOANO | LONDON | LOS ANGELES | MIAMI | MILAN | NEW YORK | ROME | SHANGHAI | SINGAPORE | TAICHUNG | TOKYO
           </a>
         </div>
@@ -2603,6 +3045,350 @@
       </div>
     </div>
   </footer>
+
+  <!-- CITY LOGIC: real time + real temperature via Open-Meteo -->
+  <script>
+    // CONFIG: real city data (timezone + coordinates for real weather)
+    const LOCATIONS = {
+      paris: {
+        city: 'Paris',
+        timezone: 'Europe/Paris',
+        latitude: 48.8566,
+        longitude: 2.3522,
+        fallbackTemp: '15°C',
+        desc: 'European hub for energy & ESG consulting, coordinating North Europe-country projects and global deployments.',
+        tags: ['EU HQ', 'ESG · SUSTAINABILITY CERTIFICATIONS'],
+        address: 'Paris · France',
+        extra: '+33 1 23 45 67 89 · paris@fgb-studio.com',
+        image: 'assets/img/offices/paris.jpg'
+      },
+      milan: {
+        city: 'Milan',
+        timezone: 'Europe/Rome',
+        latitude: 45.4642,
+        longitude: 9.1900,
+        fallbackTemp: '17°C',
+        desc: 'Design-driven engineering office, focused Sustainability, Energy and IAQ monitoring and LEED / WELL certifications.',
+        tags: ['ENGINEERING', 'SUSTAINABILITY', 'LEED · WELL · BREEAM · MONITORING'],
+        address: 'Milano · Italy',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/milano.jpg'
+      },
+      london: {
+        city: 'London',
+        timezone: 'Europe/London',
+        latitude: 51.5074,
+        longitude: -0.1278,
+        fallbackTemp: '12°C',
+        desc: 'UK strategic Headquarter for global ESG governance, portfolio decarbonisation and certification roadmaps across prime luxury real estate.',
+        tags: ['ESG ADVISORY', 'REAL ESTATE', 'LEED · BREEAM · GRESB · SUSTAINABILITY CERTIFICATIONS'],
+        address: '120 Bishopsgate, EC2M 1AL London · UK',
+        extra: '+44 75545-93399 · london@fgb-studio.com',
+        image: 'assets/img/offices/london.jpg'
+      },
+      newyork: {
+        city: 'New York',
+        timezone: 'America/New_York',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        fallbackTemp: '22°C',
+        desc: 'North American operations center, managing roll-outs and continuous commissioning for global brands.',
+        tags: ['NORTH AMERICA'],
+        address: '350 5th Ave, New York, NY 10118 · USA',
+        extra: '+44 75545-93399 · nyc@fgb-studio.com',
+        image: 'assets/img/offices/new york.jpg'
+      },
+      shanghai: {
+        city: 'Shanghai',
+        timezone: 'Asia/Shanghai',
+        latitude: 31.2304,
+        longitude: 121.4737,
+        fallbackTemp: '19°C',
+        desc: 'APAC coordination node, supervising deployments in China and neighbouring markets.',
+        tags: ['APAC', 'ROLL-OUTS'],
+        address: '88 Century Avenue, Pudong, Shanghai · China',
+        extra: '+44 75545-93399 · shanghai@fgb-studio.com',
+        image: 'assets/img/offices/shanghai.jpg'
+      },
+      amsterdam: {
+        city: 'Amsterdam',
+        timezone: 'Europe/Amsterdam',
+        latitude: 52.362956672528675,
+        longitude: 4.9108977588883755,
+        fallbackTemp: '19°C',
+        desc: 'Benelux operations hub for luxury portfolios, combining data‑driven monitoring with ESG strategies and multi‑asset certification pathways.',
+        tags: ['BENELUX', 'MONITORING', 'LEED'],
+        address: 'Herengracht 123, 1015 BS Amsterdam · Netherlands',
+        extra: '+44 75545-93399 · amsterdam@fgb-studio.com',
+        image: 'assets/img/offices/amsterdam.jpg'
+      },
+      loano: {
+        city: 'Loano',
+        timezone: 'Europe/Rome',
+        latitude: 44.1330,
+        longitude: 8.2500,
+        fallbackTemp: '20°C',
+        desc: 'Italian Riviera base for sustainable resorts and lifestyle destinations, blending seaside hospitality with measurable energy and comfort performance.',
+        tags: ['ITALY', 'COASTAL', 'HOSPITALITY & RESORTS', 'LEED'],
+        address: 'Loano, Savona · Italy',
+        extra: '+44 75545-93399 · loano@fgb-studio.com',
+        image: 'assets/img/offices/loano.jpg'
+      },
+      aixenprovence: {
+        city: 'Aix-en-Provence',
+        timezone: 'Europe/Paris',
+        latitude: 43.5297,
+        longitude: 5.4474,
+        fallbackTemp: '19°C',
+        desc: 'Mediterranean base for luxury retail and hospitality projects, aligning brand experiences with ESG roadmaps and high‑performing green buildings.',
+        tags: ['MEDITERRANEAN', 'LEED · BREEAM · SUSTAINABILITY CERTIFICATIONS'],
+        address: 'Aix-en-Provence · France',
+        extra: '+44 75545-93399 · aix@fgb-studio.com',
+        image: 'assets/img/offices/aix en provence.jpg'
+      },
+      dubai: {
+        city: 'Dubai',
+        timezone: 'Asia/Dubai',
+        latitude: 25.2048,
+        longitude: 55.2708,
+        fallbackTemp: '30°C',
+        desc: 'Middle East gateway for flagship boutiques, hotels and mixed‑use icons, integrating desert‑ready low‑carbon design with premium guest comfort.',
+        tags: ['MIDDLE EAST', 'LUXURY & ESG HUB', 'LEED · BREEAM'],
+        address: 'Dubai · United Arab Emirates',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/dubai.jpg'
+      },
+      miami: {
+        city: 'Miami',
+        timezone: 'America/New_York',
+        latitude: 25.7617,
+        longitude: -80.1918,
+        fallbackTemp: '28°C',
+        desc: 'Americas coastal office for luxury hospitality and residential towers, focusing on low‑carbon operations, resilience and wellness‑oriented design.',
+        tags: ['EAST COAST', 'HOSPITALITY'],
+        address: 'Miami, FL · USA',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/miami.jpg'
+      },
+      hochiminh: {
+        city: 'Ho Chi Minh City',
+        timezone: 'Asia/Ho_Chi_Minh',
+        latitude: 10.8231,
+        longitude: 106.6297,
+        fallbackTemp: '30°C',
+        desc: 'Southeast Asia coordination node for factories, logistics and retail networks, tracking carbon, comfort and compliance across fast‑growing markets.',
+        tags: ['APAC', 'SOUTHEAST ASIA'],
+        address: 'Ho Chi Minh City · Vietnam',
+        extra: 'fgb@fgb-studio.com',
+        image: 'assets/img/offices/ho chi minh.jpg'
+      },
+      rome: {
+        city: 'Rome',
+        timezone: 'Europe/Rome',
+        latitude: 41.9028,
+        longitude: 12.4964,
+        fallbackTemp: '19°C',
+        desc: 'Italian coordination office for Mediterranean projects, heritage buildings and ESG reporting.',
+        tags: ['MEDITERRANEAN', 'ENGINEERING'],
+        address: 'Rome · Italy',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/rome.jpg'
+      },
+      singapore: {
+        city: 'Singapore',
+        timezone: 'Asia/Singapore',
+        latitude: 1.3521,
+        longitude: 103.8198,
+        fallbackTemp: '30°C',
+        desc: 'Southeast Asia hub for regional roll-outs, data centers and sustainability advisory.',
+        tags: ['SEA HUB', 'APAC'],
+        address: 'Singapore · Singapore',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/singapore.jpg'
+      },
+      taichung: {
+        city: 'Taichung',
+        timezone: 'Asia/Taipei',
+        latitude: 24.1477,
+        longitude: 120.6736,
+        fallbackTemp: '27°C',
+        desc: 'Taiwan hub supporting manufacturing sites, logistics platforms and APAC ESG reporting.',
+        tags: ['APAC', 'TAIWAN'],
+        address: 'Taichung · Taiwan',
+        extra: 'fgb@fgb-studio.com',
+        image: 'assets/img/offices/taichung.jpg'
+      },
+      losangeles: {
+        city: 'Los Angeles',
+        timezone: 'America/Los_Angeles',
+        latitude: 34.0522,
+        longitude: -118.2437,
+        fallbackTemp: '24°C',
+        desc: 'West Coast hub for flagship stores, studios and creative campuses, pairing WELL‑aligned comfort with continuous IEQ and energy analytics.',
+        tags: ['WEST COAST', 'RETAIL · STUDIOS', 'LEED · INDOOR ENVIRONMENT QUALITY · MONITORING'],
+        address: 'Los Angeles, CA · USA',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/los-angeles.jpg'
+      },
+      tokyo: {
+        city: 'Tokyo',
+        timezone: 'Asia/Tokyo',
+        latitude: 35.6762,
+        longitude: 139.6503,
+        fallbackTemp: '24°C',
+        desc: 'East Asia hub for flagship stores, technology-driven monitoring and ESG implementation.',
+        tags: ['EAST ASIA', 'LEED', 'FLAGSHIP'],
+        address: 'Tokyo · Japan',
+        extra: '+44 75545-93399 · fgb@fgb-studio.com',
+        image: 'assets/img/offices/tokyo.jpg'
+      }      
+    };
+
+    const imgEl = document.getElementById('w-image');
+    const cityEl = document.getElementById('w-city');
+    const timeEl = document.getElementById('w-time');
+    const tempEl = document.getElementById('w-temp');
+    const descEl = document.getElementById('w-desc');
+    const tagsEl = document.getElementById('w-tags');
+    const addressEl = document.getElementById('w-address');
+    const extraEl = document.getElementById('w-extra');
+    const locationButtons = document.querySelectorAll('[data-location-id]');
+
+    let currentLocationId = 'london';
+
+    function formatTimeForTimezone(timezone) {
+      try {
+        return new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: timezone
+        }).format(new Date());
+      } catch (e) {
+        console.error('Time format error', e);
+        return '--:--';
+      }
+    }
+
+    function updateTimeForLocation(id) {
+      const loc = LOCATIONS[id];
+      if (!loc) return;
+      timeEl.textContent = formatTimeForTimezone(loc.timezone || 'UTC');
+    }
+
+    async function updateTempForLocation(id) {
+      const loc = LOCATIONS[id];
+      if (!loc) return;
+
+      // default fallback value
+      tempEl.textContent = loc.fallbackTemp || '--°C';
+
+      if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
+        return;
+      }
+
+      try {
+        const url =
+          'https://api.open-meteo.com/v1/forecast?' +
+          'latitude=' + loc.latitude +
+          '&longitude=' + loc.longitude +
+          '&current_weather=true';
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Weather HTTP error');
+
+        const data = await response.json();
+        const t = data && data.current_weather && data.current_weather.temperature;
+
+        if (typeof t === 'number') {
+          const rounded = Math.round(t);
+          tempEl.textContent = rounded + '°C';
+        }
+      } catch (error) {
+        console.error('Weather fetch error for', id, error);
+        // keep fallback temperature already set
+      }
+    }
+
+    function setActiveLocation(id) {
+      const loc = LOCATIONS[id];
+      if (!loc) return;
+
+      currentLocationId = id;
+
+      // Active state on buttons
+      locationButtons.forEach(btn => {
+        const isActive = btn.dataset.locationId === id;
+        btn.classList.toggle('bg-white/10', isActive);
+        btn.classList.toggle('bg-white/5', !isActive);
+        btn.classList.toggle('border-emerald-400', isActive);
+        btn.classList.toggle('border-white/10', !isActive);
+
+        const dot = btn.querySelector('.dot');
+        if (dot) {
+          dot.classList.toggle('bg-emerald-400', isActive);
+          dot.classList.toggle('bg-white/30', !isActive);
+          dot.classList.toggle('shadow-[0_0_8px_rgba(52,211,153,0.6)]', isActive);
+        }
+      });
+
+      // Text content
+      cityEl.textContent = loc.city;
+      descEl.textContent = loc.desc;
+      addressEl.textContent = loc.address;
+      extraEl.textContent = loc.extra;
+
+      // Tags
+      tagsEl.innerHTML = '';
+      (loc.tags || []).forEach(tag => {
+        const span = document.createElement('span');
+        span.className =
+          'px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] uppercase tracking-[0.15em] text-white/70';
+        span.textContent = tag;
+        tagsEl.appendChild(span);
+      });
+
+      // Background image (with fade)
+      if (loc.image) {
+        const newSrc = loc.image;
+        imgEl.style.opacity = '0';
+        const preload = new Image();
+        preload.src = newSrc;
+        preload.onload = () => {
+          imgEl.src = newSrc;
+          imgEl.style.opacity = '1';
+        };
+      }
+
+      // Update with real data
+      updateTimeForLocation(id);
+      updateTempForLocation(id);
+    }
+
+    // Event listeners
+    locationButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setActiveLocation(btn.dataset.locationId);
+      });
+    });
+
+    // Initial state
+    setActiveLocation('london');
+
+    // Keep time synced (every 30s)
+    setInterval(() => {
+      if (currentLocationId) {
+        updateTimeForLocation(currentLocationId);
+      }
+    }, 30000);
+
+    // Refresh temperature every 10 minutes for selected city
+    setInterval(() => {
+      if (currentLocationId) {
+        updateTempForLocation(currentLocationId);
+      }
+    }, 10 * 60 * 1000);
+  </script>
   <!-- MODALE ISCRIZIONE NEWSLETTER DETTAGLIATA -->
   <div class="newsletter-modal" id="newsletter-modal" aria-hidden="true">
     <div class="newsletter-modal__overlay"></div>
